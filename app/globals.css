@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+:root {
+  --background: #F6F1E8;
+  --foreground: #171512;
+  --muted: #6d675e;
+  --border: #e4ddd2;
+  --accent: #C85B28;
+  --surface: #fffdf8;
+  --dark: #11100E;
+  --success: #2d8a4e;
+  --error: #c43c3c;
+  --space: 1.5rem;
+  --radius: 0.75rem;
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-surface: var(--surface);
+  --color-dark: var(--dark);
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --radius-lg: var(--radius);
+  --spacing-page: var(--space);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--surface);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* ─── Focus ring ───────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Smooth scroll for reduced-motion users ───── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Custom Cursor ────────────────────────────── */
+.cursor-dot {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  mix-blend-mode: difference;
+}
+
+/* ─── Loader ───────────────────────────────────── */
+@keyframes conveyor-move {
+  0% { background-position: 0 0; }
+  100% { background-position: 40px 0; }
+}
+
+.conveyor-belt {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--border) 0px,
+    var(--border) 2px,
+    transparent 2px,
+    transparent 20px
+  );
+  background-size: 40px 100%;
+  animation: conveyor-move 0.8s linear infinite;
+}
+
+/* ─── Status badges ────────────────────────────── */
+.status-recovered { color: var(--success); background: color-mix(in srgb, var(--success) 10%, transparent); }
+.status-misplaced { color: var(--error); background: color-mix(in srgb, var(--error) 10%, transparent); }
+.status-transit { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.status-pending { color: var(--muted); background: color-mix(in srgb, var(--muted) 10%, transparent); }
+.status-assigned { color: #2563eb; background: color-mix(in srgb, #2563eb 10%, transparent); }
+
+/* ─── Custom Leaflet Map Styling (Watermark-Free Cyber Theme) ──── */
+.radar-tile-layer img {
+  filter: invert(100%) hue-rotate(185deg) brightness(85%) contrast(135%) saturate(75%) !important;
+}
+
+.custom-leaflet-popup .leaflet-popup-content-wrapper {
+  background: rgba(15, 23, 42, 0.95) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+  color: #f8fafc !important;
+  border-radius: 14px !important;
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.7), 0 0 15px rgba(56, 189, 248, 0.15) !important;
+}
+
+.custom-leaflet-popup .leaflet-popup-tip {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border: 1px solid rgba(56, 189, 248, 0.3) !important;
+}
+
+.custom-leaflet-tooltip {
+  background: rgba(15, 23, 42, 0.9) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(148, 163, 184, 0.3) !important;
+  color: #f8fafc !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5) !important;
+  padding: 6px 10px !important;
+}
+
+.custom-leaflet-tooltip::before {
+  border-top-color: rgba(15, 23, 42, 0.9) !important;
+}
