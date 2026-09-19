@@ -56,12 +56,12 @@ Your parcel *${shipment.id}* was safely transferred onto express carrier *${vehi
 🚚 *Assigned Carrier:* ${vehicleId}
 ⏰ *Guaranteed Delivery ETA:* ${etaFormatted} (On Schedule)
 🌱 *Green Logistics:* ${co2Avoided} kg CO₂ avoided
-📍 *Live Tracking:* http://localhost:3000/track?id=${shipment.id}
+📍 *Live Tracking:* https://smart-intelligent-transport.vercel.app/track?id=${shipment.id}
 
 Thank you for choosing eco-certified logistics.`;
 
   // Real Native SMS text
-  const smsMessage = `PiggyBack Alert: Hi ${recipientName}, shipment ${shipment.id} is securely in transit via express carrier ${vehicleId}. Guaranteed ETA remains on-time for ${etaFormatted}. Shared logistics avoided ${co2Avoided} kg of carbon. Track live: http://localhost:3000/track?id=${shipment.id}`;
+  const smsMessage = `PiggyBack Alert: Hi ${recipientName}, shipment ${shipment.id} is securely in transit via express carrier ${vehicleId}. Guaranteed ETA remains on-time for ${etaFormatted}. Shared logistics avoided ${co2Avoided} kg of carbon. Track live: https://smart-intelligent-transport.vercel.app/track?id=${shipment.id}`;
 
   const handleSendToRealWhatsApp = () => {
     const targetPhone = cleanPhone || "919876543210";
@@ -359,7 +359,7 @@ Thank you for choosing eco-certified logistics.`;
                       Guaranteed ETA remains on-time for {etaFormatted}. Shared logistics avoided {co2Avoided} kg of carbon.
                     </p>
                     <p className="text-blue-100 underline pt-1 block font-mono text-[10px]">
-                      http://localhost:3000/track?id={shipment.id}
+                      https://smart-intelligent-transport.vercel.app/track?id={shipment.id}
                     </p>
                     <div className="flex items-center justify-between text-[9px] text-blue-200 pt-1 border-t border-blue-500/40">
                       <span>Header: VK-PGBACK</span>
