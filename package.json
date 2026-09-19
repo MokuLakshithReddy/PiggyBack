@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "npx tsx scripts/test-runner.ts"
   },
   "dependencies": {
     "@types/leaflet": "^1.9.22",
