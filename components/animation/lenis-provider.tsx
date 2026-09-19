@@ -12,6 +12,18 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       wheelMultiplier: 0.8,
       touchMultiplier: 1.2,
       syncTouch: true,
+      prevent: (node: any) => {
+        if (!node) return false;
+        if (typeof node.hasAttribute === "function" && node.hasAttribute("data-lenis-prevent")) return true;
+        if (typeof node.closest === "function") {
+          return (
+            node.closest("[data-lenis-prevent]") !== null ||
+            node.closest(".custom-scrollbar") !== null ||
+            node.closest(".overflow-y-auto") !== null
+          );
+        }
+        return false;
+      },
     });
 
     lenis.on('scroll', ScrollTrigger.update);

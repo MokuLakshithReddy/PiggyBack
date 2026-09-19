@@ -73,11 +73,11 @@ export default function ControlTowerPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-accent selection:text-white">
+    <div className="min-h-screen lg:h-screen lg:overflow-hidden flex flex-col bg-background text-foreground selection:bg-accent selection:text-white">
       <Navbar />
 
       {/* Control Tower Sub-Header */}
-      <div className="border-b border-border/80 bg-surface/80 px-6 py-4 flex flex-wrap items-center justify-between gap-4 backdrop-blur-md sticky top-16 z-30 shadow-xs">
+      <div className="border-b border-border/80 bg-surface/80 px-6 py-4 flex flex-wrap items-center justify-between gap-4 backdrop-blur-md sticky top-16 z-30 shadow-xs shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse ring-4 ring-emerald-500/20" />
           <div>
@@ -115,10 +115,13 @@ export default function ControlTowerPage() {
       </div>
 
       {/* Main Operations Grid */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden">
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 lg:overflow-hidden min-h-0">
         {/* Left / Center Map Canvas */}
-        <div className="lg:col-span-8 p-4 sm:p-6 flex flex-col relative border-b lg:border-b-0 lg:border-r border-border/60 bg-gradient-to-b from-background to-surface/20">
-          <div className="flex items-center justify-between mb-3">
+        <div
+          className="lg:col-span-8 p-4 sm:p-6 flex flex-col relative border-b lg:border-b-0 lg:border-r border-border/60 bg-gradient-to-b from-background to-surface/20 min-h-0 lg:h-full lg:overflow-y-auto custom-scrollbar"
+          data-lenis-prevent="true"
+        >
+          <div className="flex items-center justify-between mb-3 shrink-0">
             <div className="flex items-center gap-2">
               <Navigation className="w-4 h-4 text-accent" />
               <h2 className="text-sm font-semibold tracking-tight">
@@ -147,7 +150,7 @@ export default function ControlTowerPage() {
 
           {/* Selected Hub Floating Drawer */}
           {selectedHub && (
-            <div className="mt-4 bg-surface/90 border border-border rounded-2xl p-4 shadow-xl backdrop-blur-md flex flex-wrap items-center justify-between gap-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
+            <div className="mt-4 bg-surface/90 border border-border rounded-2xl p-4 shadow-xl backdrop-blur-md flex flex-wrap items-center justify-between gap-4 animate-in fade-in slide-in-from-bottom-2 duration-200 shrink-0">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-accent/15 border border-accent/30 flex items-center justify-center font-mono font-bold text-accent text-sm">
                   {selectedHub.code}
@@ -184,7 +187,10 @@ export default function ControlTowerPage() {
         </div>
 
         {/* Right Sidebar: Interventions & Active Incidents */}
-        <div className="lg:col-span-4 p-4 sm:p-6 flex flex-col gap-6 overflow-y-auto max-h-[calc(100vh-120px)]">
+        <div
+          className="lg:col-span-4 p-4 sm:p-6 flex flex-col gap-6 overflow-y-auto lg:h-[calc(100vh-140px)] overscroll-contain custom-scrollbar min-h-0"
+          data-lenis-prevent="true"
+        >
           {/* Quick Metrics Header */}
           <div className="grid grid-cols-2 gap-3">
             <div className="bg-surface/60 border border-border/80 rounded-2xl p-4">
