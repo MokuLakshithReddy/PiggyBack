@@ -88,6 +88,13 @@ export class LexicographicOptimizer {
     const dropoffMs = new Date(bestCandidate.dropoffTime).getTime();
     const slaMarginMinutes = Math.round((deadlineMs - dropoffMs) / 60000);
 
+    // Primary Plan ESG & Savings Calculations
+    const baselineCharterCost = Math.round(Math.max(2400, bestCandidate.distance * 4.2 + 600));
+    const costSavingsPercent = Math.max(0, Math.min(95, Math.round(((baselineCharterCost - bestCandidate.incrementalCost) / baselineCharterCost) * 100)));
+    const co2SavedKg = Math.round(bestCandidate.distance * 0.76);
+    const fuelSavedLiters = Math.round(bestCandidate.distance * 0.28);
+    const emptyMilesAvertedKm = Math.round(bestCandidate.distance * 0.92);
+
     const primaryPlan: RecoveryPlan = {
       planId: `PLAN-PRI-${Math.random().toString(36).substring(2, 9).toUpperCase()}`,
       shipmentId: this.shipment.id,
@@ -104,6 +111,11 @@ export class LexicographicOptimizer {
       slaMarginMinutes,
       candidate: bestCandidate,
       createdAt: new Date().toISOString(),
+      co2SavedKg,
+      fuelSavedLiters,
+      emptyMilesAvertedKm,
+      baselineCharterCost,
+      costSavingsPercent,
     };
 
     // Shadow Plan: strictly independent (excluding primary vehicle's trucks)
@@ -118,6 +130,8 @@ export class LexicographicOptimizer {
       const shadowBest = shadowCandidates[0];
       const shadowDropoffMs = new Date(shadowBest.dropoffTime).getTime();
       const shadowSlaMargin = Math.round((deadlineMs - shadowDropoffMs) / 60000);
+      const shadowCharterCost = Math.round(Math.max(2400, shadowBest.distance * 4.2 + 600));
+      const shadowSavingsPercent = Math.max(0, Math.min(95, Math.round(((shadowCharterCost - shadowBest.incrementalCost) / shadowCharterCost) * 100)));
 
       shadowPlan = {
         planId: `PLAN-SHAD-${Math.random().toString(36).substring(2, 9).toUpperCase()}`,
@@ -135,6 +149,11 @@ export class LexicographicOptimizer {
         slaMarginMinutes: shadowSlaMargin,
         candidate: shadowBest,
         createdAt: new Date().toISOString(),
+        co2SavedKg: Math.round(shadowBest.distance * 0.76),
+        fuelSavedLiters: Math.round(shadowBest.distance * 0.28),
+        emptyMilesAvertedKm: Math.round(shadowBest.distance * 0.92),
+        baselineCharterCost: shadowCharterCost,
+        costSavingsPercent: shadowSavingsPercent,
       };
     }
 

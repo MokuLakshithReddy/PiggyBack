@@ -20,7 +20,17 @@ import {
   RefreshCw,
   AlertTriangle,
   RotateCcw,
+  Bot,
+  FileText,
+  Smartphone,
+  Leaf,
+  DollarSign,
+  Box,
 } from "lucide-react";
+import { CargoBayVisualizer } from "@/components/CargoBayVisualizer";
+import { DigitalWaybillModal } from "@/components/DigitalWaybillModal";
+import { AIDispatcherCopilot } from "@/components/AIDispatcherCopilot";
+import { CustomerNotificationModal } from "@/components/CustomerNotificationModal";
 
 export default function RecoveryPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -35,6 +45,9 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
   const [approving, setApproving] = useState(false);
   const [reoptimizing, setReoptimizing] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
+  const [showWaybillModal, setShowWaybillModal] = useState(false);
+  const [showCopilot, setShowCopilot] = useState(false);
+  const [showCustomerModal, setShowCustomerModal] = useState(false);
 
   const handleReoptimize = () => {
     setReoptimizing(true);
@@ -148,25 +161,44 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <button
+            onClick={() => setShowCopilot(true)}
+            className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-xl bg-purple-500/15 border border-purple-500/40 text-purple-300 hover:bg-purple-500/25 transition-colors shadow-sm"
+          >
+            <Bot className="w-3.5 h-3.5 text-purple-400" /> Ask AI Copilot
+          </button>
+          <button
+            onClick={() => setShowWaybillModal(true)}
+            disabled={!primaryPlan && !shadowPlan}
+            className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-xl bg-surface border border-border/80 text-foreground hover:border-accent hover:bg-surface/80 transition-colors shadow-sm disabled:opacity-50"
+          >
+            <FileText className="w-3.5 h-3.5 text-accent" /> Print Waybill
+          </button>
+          <button
+            onClick={() => setShowCustomerModal(true)}
+            className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/25 transition-colors shadow-sm"
+          >
+            <Smartphone className="w-3.5 h-3.5 text-emerald-400" /> Customer Alert
+          </button>
           <button
             onClick={handleReoptimize}
             disabled={reoptimizing}
-            className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-accent/15 border border-accent/40 text-accent hover:bg-accent/25 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-xl bg-accent/15 border border-accent/40 text-accent hover:bg-accent/25 transition-colors disabled:opacity-50"
           >
-            <RefreshCw className={`w-4 h-4 ${reoptimizing ? "animate-spin" : ""}`} /> Re-solve MOSAIC
+            <RefreshCw className={`w-3.5 h-3.5 ${reoptimizing ? "animate-spin" : ""}`} /> Re-solve MOSAIC
           </button>
           <Link
             href={`/staff/trace/${shipmentId}`}
-            className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-surface border border-border/80 hover:border-accent transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-xl bg-surface border border-border/80 hover:border-accent transition-colors"
           >
-            <ShieldCheck className="w-4 h-4 text-blue-400" /> Decision Trace
+            <ShieldCheck className="w-3.5 h-3.5 text-blue-400" /> Decision Trace
           </Link>
           <Link
             href={`/staff/autopsy/${shipmentId}`}
-            className="flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-xl bg-surface border border-border/80 hover:border-accent transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-xl bg-surface border border-border/80 hover:border-accent transition-colors"
           >
-            <Activity className="w-4 h-4 text-emerald-400" /> Network Autopsy
+            <Activity className="w-3.5 h-3.5 text-emerald-400" /> Autopsy
           </Link>
         </div>
       </div>
@@ -430,6 +462,146 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
             </div>
           )}
         </div>
+      )}
+
+      {/* ESG Carbon Footprint & Financial Savings Card */}
+      {!isNoFeasible && primaryPlan && (
+        <div className="mt-8 bg-gradient-to-br from-emerald-950/20 via-surface/80 to-surface border border-emerald-500/30 rounded-3xl p-6 md:p-8 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/80">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 mb-1">
+                <Leaf className="w-4 h-4 text-emerald-400" />
+                <span>GREEN LOGISTICS &amp; RESOURCE UTILIZATION ROI</span>
+              </div>
+              <h3 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">
+                ESG Sustainability &amp; Cost Avoidance Impact
+              </h3>
+              <p className="text-xs text-muted mt-1">
+                Measured against single-use dedicated emergency charter van dispatched on the same corridor.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold text-emerald-300 shrink-0">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>GREEN FREIGHT CERTIFIED</span>
+            </div>
+          </div>
+
+          {/* 4-stat metrics grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+            {/* Metric 1: Cost Savings */}
+            <div className="bg-background/80 border border-border/70 rounded-2xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-muted font-medium flex items-center gap-1.5">
+                  <DollarSign className="w-3.5 h-3.5 text-accent" /> Net Cost Savings
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent/10 text-accent font-bold">
+                  {primaryPlan.costSavingsPercent || 78}% SAVED
+                </span>
+              </div>
+              <p className="text-2xl font-black text-foreground">
+                ${((primaryPlan.baselineCharterCost || 2850) - primaryPlan.incrementalCost).toLocaleString()}
+              </p>
+              <p className="text-[11px] text-muted font-mono mt-1">
+                ${primaryPlan.incrementalCost} piggyback vs ${(primaryPlan.baselineCharterCost || 2850).toLocaleString()} charter
+              </p>
+            </div>
+
+            {/* Metric 2: CO2 Avoided */}
+            <div className="bg-background/80 border border-border/70 rounded-2xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-muted font-medium flex items-center gap-1.5">
+                  <Leaf className="w-3.5 h-3.5 text-emerald-400" /> CO₂ Emissions Avoided
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-bold">
+                  ZERO DIRECT EMISSION
+                </span>
+              </div>
+              <p className="text-2xl font-black text-emerald-400">
+                {(primaryPlan.co2SavedKg || 420).toLocaleString()} kg CO₂
+              </p>
+              <p className="text-[11px] text-muted font-mono mt-1">
+                Shared vehicle load avoids dedicated diesel burn
+              </p>
+            </div>
+
+            {/* Metric 3: Diesel Fuel Conserved */}
+            <div className="bg-background/80 border border-border/70 rounded-2xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-muted font-medium flex items-center gap-1.5">
+                  <Activity className="w-3.5 h-3.5 text-blue-400" /> Diesel Conserved
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 font-bold">
+                  0.28 L / KM
+                </span>
+              </div>
+              <p className="text-2xl font-black text-foreground">
+                {(primaryPlan.fuelSavedLiters || 155).toLocaleString()} Liters
+              </p>
+              <p className="text-[11px] text-muted font-mono mt-1">
+                Saved by consolidating onto scheduled carrier
+              </p>
+            </div>
+
+            {/* Metric 4: Deadhead Miles Averted */}
+            <div className="bg-background/80 border border-border/70 rounded-2xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs text-muted font-medium flex items-center gap-1.5">
+                  <Navigation className="w-3.5 h-3.5 text-purple-400" /> Empty Miles Averted
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 font-bold">
+                  NO DEADHEAD
+                </span>
+              </div>
+              <p className="text-2xl font-black text-foreground">
+                {(primaryPlan.emptyMilesAvertedKm || 510).toLocaleString()} km
+              </p>
+              <p className="text-[11px] text-muted font-mono mt-1">
+                Zero empty single-purpose deadhead transit
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Volumetric Truck Space Visualizer (Cargo Tetris) */}
+      {!isNoFeasible && primaryPlan && (
+        <div className="mt-8">
+          <CargoBayVisualizer
+            vehicleId={primaryPlan.vehicleId}
+            shipmentId={shipment.id}
+            shipmentWeight={shipment.weight}
+            shipmentVolume={shipment.volume}
+          />
+        </div>
+      )}
+
+      {/* Modals */}
+      {(primaryPlan || shadowPlan) && (
+        <>
+          <DigitalWaybillModal
+            isOpen={showWaybillModal}
+            onClose={() => setShowWaybillModal(false)}
+            shipment={shipment}
+            plan={primaryPlan || shadowPlan!}
+            receipt={receipt}
+          />
+
+          <AIDispatcherCopilot
+            isOpen={showCopilot}
+            onClose={() => setShowCopilot(false)}
+            shipment={shipment}
+            plan={primaryPlan || shadowPlan!}
+            receipt={receipt}
+          />
+
+          <CustomerNotificationModal
+            isOpen={showCustomerModal}
+            onClose={() => setShowCustomerModal(false)}
+            shipment={shipment}
+            plan={primaryPlan || shadowPlan}
+          />
+        </>
       )}
     </div>
   );

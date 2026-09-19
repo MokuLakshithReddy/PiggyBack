@@ -155,6 +155,11 @@ export type RecoveryPlan = {
   slaMarginMinutes: number;
   candidate: CandidateRoute;
   createdAt: string;
+  co2SavedKg?: number;
+  fuelSavedLiters?: number;
+  emptyMilesAvertedKm?: number;
+  baselineCharterCost?: number;
+  costSavingsPercent?: number;
 };
 
 export type DisruptionType =

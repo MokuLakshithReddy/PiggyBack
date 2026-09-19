@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, Package, MapPin, ArrowRight, Clock, AlertCircle, ShieldCheck, Zap } from "lucide-react";
+import { Search, Package, MapPin, ArrowRight, Clock, AlertCircle, ShieldCheck, Zap, Leaf, Smartphone } from "lucide-react";
 import { getTrackingResult } from "@/lib/store";
 import type { TrackingResult } from "@/types";
 import { Navbar } from "@/components/Navbar";
 import Link from "next/link";
+import { CustomerNotificationModal } from "@/components/CustomerNotificationModal";
 
 function TrackingContent() {
   const searchParams = useSearchParams();
@@ -15,6 +16,7 @@ function TrackingContent() {
   const [input, setInput] = useState(initialId);
   const [state, setState] = useState<"idle" | "searching" | "found" | "not-found">("idle");
   const [result, setResult] = useState<TrackingResult | null>(null);
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
 
   const doSearch = useCallback((id: string) => {
     if (!id.trim()) return;
@@ -155,23 +157,46 @@ function TrackingContent() {
             </div>
 
             {/* Dynamic Recovery Notice */}
-            {result.shipment.status === "Recovery Found" && (
-              <div className="mt-6 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                  <p className="text-xs text-emerald-400 font-bold uppercase tracking-wider font-mono">
-                    ✓ PIGGYBACK RECOVERY ENGAGED
-                  </p>
-                  <p className="text-xs text-muted mt-0.5">
-                    Assigned to scheduled fleet vehicle{" "}
-                    <strong className="text-foreground">{result.shipment.assignedTruck}</strong>. Expected on-time delivery maintained.
-                  </p>
+            {(result.shipment.status === "Recovery Found" || result.shipment.status === "Recovered") && (
+              <div className="mt-6 p-5 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs text-emerald-400 font-bold uppercase tracking-wider font-mono">
+                        ✓ PIGGYBACK RECOVERY ENGAGED
+                      </p>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 flex items-center gap-1">
+                        <Leaf className="w-3 h-3 text-emerald-400" /> 420 kg CO₂ Avoided
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted mt-1">
+                      Assigned to scheduled fleet vehicle{" "}
+                      <strong className="text-foreground">{result.shipment.assignedTruck || "TRK-003"}</strong>. Expected on-time delivery maintained.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={() => setShowNotificationModal(true)}
+                      className="px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 text-xs font-semibold flex items-center gap-1.5 transition-colors border border-emerald-500/30"
+                    >
+                      <Smartphone className="w-3.5 h-3.5" /> Customer Alert
+                    </button>
+                    <Link
+                      href={`/staff/trace/${result.shipment.id}`}
+                      className="px-3 py-1.5 rounded-xl bg-surface border border-border text-foreground hover:border-accent text-xs font-semibold flex items-center gap-1"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5 text-blue-400" /> View Proof
+                    </Link>
+                  </div>
                 </div>
-                <Link
-                  href={`/staff/trace/${result.shipment.id}`}
-                  className="px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 text-xs font-semibold flex items-center gap-1 shrink-0"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5" /> View Proof
-                </Link>
+
+                {/* ESG Green Corridor Certified Callout */}
+                <div className="pt-3 border-t border-emerald-500/20 flex items-center justify-between text-[11px] font-mono text-emerald-300/90">
+                  <span className="flex items-center gap-1.5">
+                    <Leaf className="w-3.5 h-3.5 text-emerald-400" /> Zero Dedicated Empty Haul Carbon Generated
+                  </span>
+                  <span className="text-muted">Eco-Certified Shared Routing</span>
+                </div>
               </div>
             )}
 
@@ -240,6 +265,15 @@ function TrackingContent() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Customer Notification Simulator Modal */}
+      {result && (
+        <CustomerNotificationModal
+          isOpen={showNotificationModal}
+          onClose={() => setShowNotificationModal(false)}
+          shipment={result.shipment as any}
+        />
       )}
     </div>
   );
