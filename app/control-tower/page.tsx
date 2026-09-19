@@ -39,6 +39,7 @@ export default function ControlTowerPage() {
   const [shipments, setShipments] = useState<StaffShipment[]>([]);
   const [selectedHub, setSelectedHub] = useState<Hub | null>(null);
   const [selectedPathId, setSelectedPathId] = useState<string | null>(null);
+  const [highlightedCorridor, setHighlightedCorridor] = useState<{ from: string; to: string } | null>(null);
   const [isSolving, setIsSolving] = useState<string | null>(null);
 
   const loadData = () => {
@@ -62,16 +63,13 @@ export default function ControlTowerPage() {
 
   const handleQuickSolve = (shipmentId: string) => {
     setIsSolving(shipmentId);
-    setTimeout(() => {
-      try {
-        stateManager.solveRecovery(shipmentId);
-        loadData();
-      } catch (e) {
-        console.error("Quick solve error:", e);
-      } finally {
-        setIsSolving(null);
-      }
-    }, 400);
+    try {
+      stateManager.solveRecovery(shipmentId);
+      router.push(`/staff/recovery/${shipmentId}`);
+    } catch (e) {
+      console.error("Quick solve error:", e);
+      setIsSolving(null);
+    }
   };
 
   return (
@@ -143,6 +141,7 @@ export default function ControlTowerPage() {
               onQuickSolve={handleQuickSolve}
               selectedPathId={selectedPathId}
               onSelectPath={(p) => setSelectedPathId(p?.id || null)}
+              highlightedCorridor={highlightedCorridor}
             />
           </div>
 
@@ -270,36 +269,42 @@ export default function ControlTowerPage() {
                         </Link>
                         <button
                           onClick={() => {
-                            const trk = trucks.find(
-                              (t) =>
-                                t.currentLocation.toLowerCase() === s.currentLocation.toLowerCase() ||
-                                t.destination.toLowerCase() === s.destination.toLowerCase() ||
-                                t.schedule.some(
-                                  (seg) => seg.fromNode.toLowerCase() === s.currentLocation.toLowerCase()
-                                )
-                            );
-                            if (trk && trk.schedule[0]) {
-                              setSelectedPathId(`${trk.id}-${trk.schedule[0].fromNode}-${trk.schedule[0].toNode}`);
+                            if (
+                              highlightedCorridor &&
+                              highlightedCorridor.from.toLowerCase() === s.currentLocation.toLowerCase() &&
+                              highlightedCorridor.to.toLowerCase() === s.destination.toLowerCase()
+                            ) {
+                              setHighlightedCorridor(null);
+                              setSelectedPathId(null);
                             } else {
-                              const hub = hubs.find(
-                                (h) => h.name.toLowerCase() === s.currentLocation.toLowerCase()
-                              );
-                              if (hub) setSelectedHub(hub);
+                              setHighlightedCorridor({
+                                from: s.currentLocation,
+                                to: s.destination,
+                              });
                             }
                           }}
-                          className="flex items-center gap-1 text-[11px] font-mono text-orange-400 hover:text-orange-300 transition-colors cursor-pointer"
-                          title="Isolate & highlight carrier corridor on map"
+                          className={`flex items-center gap-1 text-[11px] font-mono transition-all cursor-pointer px-2.5 py-1 rounded-lg border ${
+                            highlightedCorridor?.from.toLowerCase() === s.currentLocation.toLowerCase() &&
+                            highlightedCorridor?.to.toLowerCase() === s.destination.toLowerCase()
+                              ? "bg-accent text-white border-accent font-bold shadow-xs"
+                              : "text-accent border-accent/40 bg-accent/5 hover:bg-accent/15"
+                          }`}
+                          title="Isolate & highlight recovery corridor on map"
                         >
-                          <Route className="w-3 h-3" /> Highlight
+                          <Route className="w-3 h-3" />
+                          {highlightedCorridor?.from.toLowerCase() === s.currentLocation.toLowerCase() &&
+                          highlightedCorridor?.to.toLowerCase() === s.destination.toLowerCase()
+                            ? "Active"
+                            : "Highlight"}
                         </button>
                       </div>
                       <button
                         onClick={() => handleQuickSolve(s.id)}
                         disabled={isSolving === s.id}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-accent text-white hover:bg-accent/90 transition-all shadow-md active:scale-95 disabled:opacity-50"
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-accent text-white hover:bg-accent/90 transition-all shadow-md active:scale-95 disabled:opacity-50 cursor-pointer"
                       >
-                        <Zap className="w-3.5 h-3.5" />
-                        {isSolving === s.id ? "Solving CP-SAT..." : "Solve with MOSAIC"}
+                        <Zap className={`w-3.5 h-3.5 ${isSolving === s.id ? "animate-spin" : ""}`} />
+                        {isSolving === s.id ? "Solving & Routing..." : "Solve with MOSAIC"}
                       </button>
                     </div>
                   </div>

@@ -16,7 +16,7 @@ import { ReceiptBuilder } from "./receipt-builder";
 import { AutopsyEngine } from "./autopsy";
 import { DisruptionEngine } from "./disruptions";
 
-const CURRENT_STATE_VERSION = 7;
+const CURRENT_STATE_VERSION = 8;
 
 const STORAGE_KEYS = {
   shipments: "pgb_mosaic_shipments",
@@ -79,10 +79,18 @@ class StateManager {
       const parsedVersion = v ? parseInt(v, 10) : 0;
       let parsedShipments: StaffShipment[] = s ? JSON.parse(s) : [];
 
-      // Check if state is stale (old version, empty, or expired shipment deadlines)
+      // Check if state is stale (old version, empty, expired shipment deadlines, or missing newly added hubs)
+      let storedHubsCount = 0;
+      try {
+        if (h) storedHubsCount = JSON.parse(h).length;
+      } catch {
+        storedHubsCount = 0;
+      }
+
       const isStale =
         parsedVersion < CURRENT_STATE_VERSION ||
         parsedShipments.length === 0 ||
+        storedHubsCount < 20 ||
         parsedShipments.some((sh) => new Date(sh.deadline).getTime() <= Date.now());
 
       if (isStale) {
@@ -93,6 +101,10 @@ class StateManager {
       this.shipments = parsedShipments;
       this.trucks = t ? JSON.parse(t) : getFreshSeedData().trucks;
       this.hubs = h ? JSON.parse(h) : getFreshSeedData().hubs;
+      if (!this.hubs || this.hubs.length < 20) {
+        this.hubs = getFreshSeedData().hubs;
+        this.saveState();
+      }
       this.cargo = c ? JSON.parse(c) : getFreshSeedData().cargo;
       this.plans = p ? JSON.parse(p) : {};
       this.receipts = r ? JSON.parse(r) : {};
