@@ -139,13 +139,27 @@ export function Hero() {
             <a href="#story-sequence" className="hover:text-foreground transition-colors">How it works</a>
             <a href="#recovery-demo" className="hover:text-foreground transition-colors">Demo</a>
           </nav>
-          <div data-hero-nav className="flex items-center gap-4">
+          <div data-hero-nav className="flex items-center gap-2 sm:gap-4">
+            <a
+              href="/control-tower"
+              className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-surface border border-border text-foreground hover:border-accent transition-colors flex items-center gap-1.5 shadow-2xs"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="hidden sm:inline">Control Tower</span>
+              <span className="sm:hidden">Map</span>
+            </a>
+            <a
+              href="/judge"
+              className="text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-500 border border-amber-500/30 hover:bg-amber-500/20 transition-colors hidden sm:flex items-center gap-1"
+            >
+              Judge Mode
+            </a>
             <a href="/track" className="text-xs sm:text-sm font-medium text-muted hover:text-foreground transition-colors">
               Track
             </a>
             <a
               href="/staff/dashboard"
-              className="text-xs sm:text-sm font-medium text-accent hover:text-foreground transition-colors"
+              className="text-xs sm:text-sm font-semibold text-accent hover:text-foreground transition-colors"
             >
               Staff Ops →
             </a>

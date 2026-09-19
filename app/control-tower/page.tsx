@@ -273,6 +273,13 @@ export default function ControlTowerPage() {
                         >
                           Details
                         </Link>
+                        <Link
+                          href={`/track?id=${s.id}`}
+                          className="text-xs text-muted hover:text-accent transition-colors font-medium flex items-center gap-1"
+                          title="View Live Moving Truck Map"
+                        >
+                          <TruckIcon className="w-3 h-3 text-accent" /> Track
+                        </Link>
                         <button
                           onClick={() => {
                             if (

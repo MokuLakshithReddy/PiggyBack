@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono, Plus_Jakarta_Sans } from "next/font/google";
 import { LenisProvider } from "@/components/animation/lenis-provider";
 import { CustomCursor } from "@/components/CustomCursor";
+import { EvaluationGuide } from "@/components/EvaluationGuide";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <LenisProvider>
           <CustomCursor />
           {children}
+          <EvaluationGuide />
         </LenisProvider>
       </body>
     </html>

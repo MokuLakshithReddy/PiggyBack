@@ -169,15 +169,23 @@ export default function JudgeModePage() {
             </div>
 
             {lastEventMsg.shipmentId && (
-              <button
-                onClick={() => {
-                  stateManager.solveRecovery(lastEventMsg.shipmentId!);
-                  router.push(`/staff/recovery/${lastEventMsg.shipmentId}`);
-                }}
-                className="px-3 py-1.5 rounded-xl text-xs font-bold bg-accent text-white hover:bg-accent/90 transition-all shrink-0 flex items-center gap-1.5 shadow-md"
-              >
-                <Zap className="w-3.5 h-3.5" /> Inspect Recovery Plan →
-              </button>
+              <div className="flex items-center gap-2 shrink-0 flex-wrap">
+                <button
+                  onClick={() => {
+                    stateManager.solveRecovery(lastEventMsg.shipmentId!);
+                    router.push(`/staff/recovery/${lastEventMsg.shipmentId}`);
+                  }}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-accent text-white hover:bg-accent/90 transition-all flex items-center gap-1.5 shadow-md"
+                >
+                  <Zap className="w-3.5 h-3.5" /> Solve Recovery →
+                </button>
+                <Link
+                  href={`/track?id=${lastEventMsg.shipmentId}`}
+                  className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-surface border border-border text-foreground hover:border-accent transition-all flex items-center gap-1.5"
+                >
+                  <TruckIcon className="w-3.5 h-3.5 text-accent" /> Track Cargo
+                </Link>
+              </div>
             )}
           </div>
         )}

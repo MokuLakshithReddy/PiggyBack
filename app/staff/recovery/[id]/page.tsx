@@ -148,12 +148,18 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
       {/* Top Header & Minimalist Toolbar */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5 border-b border-border/70 pb-6">
         <div>
-          <Link
-            href={`/staff/incident/${shipmentId}`}
-            className="inline-flex items-center gap-1.5 text-xs text-muted hover:text-foreground transition-colors mb-2"
-          >
-            <ChevronLeft className="w-3.5 h-3.5" /> Back to Incident
-          </Link>
+          {/* Breadcrumb Trail */}
+          <div className="flex items-center gap-2 text-xs text-muted mb-2 font-medium flex-wrap">
+            <Link href="/control-tower" className="hover:text-accent transition-colors flex items-center gap-1">
+              <Navigation className="w-3 h-3 text-accent" /> Control Tower
+            </Link>
+            <span>/</span>
+            <Link href={`/staff/incident/${shipmentId}`} className="hover:text-accent transition-colors">
+              Incident {shipmentId}
+            </Link>
+            <span>/</span>
+            <span className="text-foreground font-semibold">Recovery Solution</span>
+          </div>
           <div className="flex items-center gap-3">
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
               Recovery Plans for {shipment.id}
@@ -169,12 +175,19 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
 
         {/* Minimalist Action Toolbar */}
         <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <Link
+            href={`/track?id=${shipmentId}`}
+            className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl bg-accent text-white hover:bg-accent/90 transition-colors shadow-2xs"
+            title="Open Live Highway Tracking Map"
+          >
+            <TruckIcon className="w-3.5 h-3.5" /> Live Map
+          </Link>
           <button
             onClick={() => setShowCustomerModal(true)}
             className="flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 transition-colors shadow-2xs"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            WhatsApp Alert
+            Customer Alert
           </button>
           <button
             onClick={() => setShowWaybillModal(true)}
@@ -213,9 +226,25 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
 
       {/* Success Banner */}
       {successMsg && (
-        <div className="bg-emerald-50 border border-emerald-300 text-emerald-900 p-4 rounded-2xl text-sm font-semibold flex items-center gap-3 animate-in fade-in slide-in-from-top-2 shadow-xs">
-          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-          <span>{successMsg}</span>
+        <div className="bg-emerald-50 border border-emerald-300 text-emerald-900 p-4 rounded-2xl text-sm font-semibold flex items-center justify-between gap-3 animate-in fade-in slide-in-from-top-2 shadow-xs flex-wrap">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <span>{successMsg}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/track?id=${shipmentId}`}
+              className="px-3.5 py-1.5 rounded-xl bg-emerald-700 text-white hover:bg-emerald-800 text-xs font-bold transition-colors flex items-center gap-1.5 shadow-xs"
+            >
+              <TruckIcon className="w-3.5 h-3.5" /> Track Moving Truck →
+            </Link>
+            <Link
+              href="/control-tower"
+              className="px-3 py-1.5 rounded-xl bg-white border border-emerald-300 text-emerald-900 hover:bg-emerald-100 text-xs font-semibold transition-colors"
+            >
+              Control Tower
+            </Link>
+          </div>
         </div>
       )}
 
