@@ -4,7 +4,7 @@ import { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { stateManager } from "@/lib/engine/state-manager";
-import { DecisionReceipt, RecoveryPlan, StaffShipment } from "@/lib/engine/types";
+import { DecisionReceipt, Hub, RecoveryPlan, StaffShipment, Truck } from "@/lib/engine/types";
 import {
   Activity,
   ArrowRight,
@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   Clock,
   Navigation,
+  Route,
   ShieldCheck,
   Truck as TruckIcon,
   XCircle,
@@ -31,6 +32,7 @@ import { CargoBayVisualizer } from "@/components/CargoBayVisualizer";
 import { DigitalWaybillModal } from "@/components/DigitalWaybillModal";
 import { AIDispatcherCopilot } from "@/components/AIDispatcherCopilot";
 import { CustomerNotificationModal } from "@/components/CustomerNotificationModal";
+import { RouteInspectionModal } from "@/components/RouteInspectionModal";
 
 export default function RecoveryPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -48,6 +50,9 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
   const [showWaybillModal, setShowWaybillModal] = useState(false);
   const [showCopilot, setShowCopilot] = useState(false);
   const [showCustomerModal, setShowCustomerModal] = useState(false);
+  const [inspectingPlan, setInspectingPlan] = useState<RecoveryPlan | null>(null);
+  const [allHubs, setAllHubs] = useState<Hub[]>([]);
+  const [allTrucks, setAllTrucks] = useState<Truck[]>([]);
 
   const handleReoptimize = () => {
     setReoptimizing(true);
@@ -77,6 +82,8 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
     setPrimaryPlan(currentPlans.find((p) => p.strategy === "PRIMARY") || null);
     setShadowPlan(currentPlans.find((p) => p.strategy === "SHADOW") || null);
     setReceipt(currentReceipt || null);
+    setAllHubs(stateManager.getHubs());
+    setAllTrucks(stateManager.getTrucks());
     setLoading(false);
   };
 
@@ -370,6 +377,15 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
                   )}
                   <span>To: <strong className="text-foreground">{primaryPlan.dropoffHub}</strong></span>
                 </div>
+
+                {/* Jury Path Inspection Button */}
+                <button
+                  type="button"
+                  onClick={() => setInspectingPlan(primaryPlan)}
+                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl border border-orange-300 bg-orange-50/80 text-orange-900 hover:bg-orange-100 transition-colors text-xs font-bold font-mono shadow-2xs cursor-pointer"
+                >
+                  <Route className="w-3.5 h-3.5 text-orange-600" /> Highlight &amp; Inspect Corridor on Map
+                </button>
               </div>
 
               <div className="pt-6 mt-4 border-t border-border/60">
@@ -457,6 +473,15 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
                   )}
                   <span>To: <strong className="text-foreground">{shadowPlan.dropoffHub}</strong></span>
                 </div>
+
+                {/* Jury Path Inspection Button */}
+                <button
+                  type="button"
+                  onClick={() => setInspectingPlan(shadowPlan)}
+                  className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl border border-blue-300 bg-blue-50/80 text-blue-900 hover:bg-blue-100 transition-colors text-xs font-bold font-mono shadow-2xs cursor-pointer"
+                >
+                  <Route className="w-3.5 h-3.5 text-blue-600" /> Highlight &amp; Inspect Alternate on Map
+                </button>
               </div>
 
               <div className="pt-6 mt-4 border-t border-border/60">
@@ -618,6 +643,15 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
             onClose={() => setShowCustomerModal(false)}
             shipment={shipment}
             plan={primaryPlan || shadowPlan}
+          />
+
+          <RouteInspectionModal
+            isOpen={Boolean(inspectingPlan)}
+            onClose={() => setInspectingPlan(null)}
+            plan={inspectingPlan}
+            shipment={shipment}
+            hubs={allHubs}
+            trucks={allTrucks}
           />
         </>
       )}

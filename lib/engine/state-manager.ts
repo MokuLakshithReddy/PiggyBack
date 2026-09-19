@@ -16,7 +16,7 @@ import { ReceiptBuilder } from "./receipt-builder";
 import { AutopsyEngine } from "./autopsy";
 import { DisruptionEngine } from "./disruptions";
 
-const CURRENT_STATE_VERSION = 6;
+const CURRENT_STATE_VERSION = 7;
 
 const STORAGE_KEYS = {
   shipments: "pgb_mosaic_shipments",

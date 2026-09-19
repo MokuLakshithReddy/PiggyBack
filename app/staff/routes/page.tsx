@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { getRoutes } from "@/lib/store";
 import type { DemoRoute } from "@/types";
 import { Route, ArrowRight, MapPin } from "lucide-react";
@@ -55,19 +56,27 @@ export default function RoutesPage() {
               ))}
             </div>
 
-            <div className="grid grid-cols-3 gap-4 text-xs pt-4 border-t border-border/50">
-              <div>
-                <p className="font-mono text-[10px] text-muted tracking-wider mb-0.5">DISTANCE</p>
-                <p className="font-medium">{r.distance} km</p>
+            <div className="flex items-center justify-between pt-4 border-t border-border/50 text-xs gap-4">
+              <div className="grid grid-cols-3 gap-6 flex-1">
+                <div>
+                  <p className="font-mono text-[10px] text-muted tracking-wider mb-0.5">DISTANCE</p>
+                  <p className="font-medium">{r.distance} km</p>
+                </div>
+                <div>
+                  <p className="font-mono text-[10px] text-muted tracking-wider mb-0.5">DURATION</p>
+                  <p className="font-medium">{Math.round(r.duration / 60)} hrs</p>
+                </div>
+                <div>
+                  <p className="font-mono text-[10px] text-muted tracking-wider mb-0.5">CARRIER</p>
+                  <p className="font-medium font-mono">{r.truckId ?? "Unassigned"}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-mono text-[10px] text-muted tracking-wider mb-0.5">DURATION</p>
-                <p className="font-medium">{Math.round(r.duration / 60)} hrs</p>
-              </div>
-              <div>
-                <p className="font-mono text-[10px] text-muted tracking-wider mb-0.5">TRUCK</p>
-                <p className="font-medium font-mono">{r.truckId ?? "Unassigned"}</p>
-              </div>
+              <Link
+                href="/control-tower"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-orange-200 bg-orange-50 text-orange-900 hover:bg-orange-100 font-mono text-[11px] font-semibold transition-colors shrink-0"
+              >
+                Inspect on Map &rarr;
+              </Link>
             </div>
           </div>
         ))}

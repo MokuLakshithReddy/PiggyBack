@@ -20282,15 +20282,114 @@ export const REAL_ROAD_ROUTES: Record<string, RoadRoute> = {
   }
 };
 
+export const PAN_INDIA_HUB_COORDS: Record<string, [number, number]> = {
+  HYD: [17.385, 78.4867],
+  BLR: [12.9716, 77.5946],
+  CHN: [13.0827, 80.2707],
+  MUM: [19.076, 72.8777],
+  PUN: [18.5204, 73.8567],
+  DEL: [28.6139, 77.209],
+  KOL: [22.5726, 88.3639],
+  NAG: [21.1458, 79.0882],
+  AMD: [23.0225, 72.5714],
+  JAI: [26.9124, 75.7873],
+  LKO: [26.8467, 80.9462],
+  PAT: [25.5941, 85.1376],
+  GAU: [26.1445, 91.7362],
+  BBI: [20.2961, 85.8245],
+  COK: [9.9312, 76.2673],
+  VTZ: [17.6868, 83.2185],
+  IDR: [22.7196, 75.8577],
+  CHD: [30.7333, 76.7794],
+  BHO: [23.2599, 77.4126],
+  CJB: [11.0168, 76.9558],
+  HYDERABAD: [17.385, 78.4867],
+  BENGALURU: [12.9716, 77.5946],
+  CHENNAI: [13.0827, 80.2707],
+  MUMBAI: [19.076, 72.8777],
+  PUNE: [18.5204, 73.8567],
+  DELHI: [28.6139, 77.209],
+  KOLKATA: [22.5726, 88.3639],
+  NAGPUR: [21.1458, 79.0882],
+  AHMEDABAD: [23.0225, 72.5714],
+  JAIPUR: [26.9124, 75.7873],
+  LUCKNOW: [26.8467, 80.9462],
+  PATNA: [25.5941, 85.1376],
+  GUWAHATI: [26.1445, 91.7362],
+  BHUBANESWAR: [20.2961, 85.8245],
+  KOCHI: [9.9312, 76.2673],
+  VISAKHAPATNAM: [17.6868, 83.2185],
+  INDORE: [22.7196, 75.8577],
+  CHANDIGARH: [30.7333, 76.7794],
+  BHOPAL: [23.2599, 77.4126],
+  COIMBATORE: [11.0168, 76.9558],
+};
+
+// Strategic intermediate highway nodes for authentic NH alignment
+const HIGHWAY_PASS_THROUGHS: Record<string, [number, number][]> = {
+  "DEL-CHD": [[28.9931, 77.0151], [29.3909, 76.9635], [29.6857, 76.9905], [30.3752, 76.7821]], // NH44 Panipat, Karnal, Ambala
+  "DEL-JAI": [[28.4595, 77.0266], [28.1989, 76.6191], [27.7032, 76.2001], [27.3489, 75.9877]], // NH48 Gurgaon, Rewari, Behror
+  "JAI-AMD": [[26.4499, 74.6399], [25.7711, 73.3234], [24.5854, 73.7125], [23.6000, 72.9600]], // NH48 Ajmer, Pali, Udaipur, Himatnagar
+  "MUM-AMD": [[19.2183, 72.9781], [20.3893, 72.9106], [21.1702, 72.8311], [22.3072, 73.1812]], // NH48 Thane, Vapi, Surat, Vadodara
+  "DEL-LKO": [[27.1767, 78.0081], [26.9855, 79.0345], [26.4499, 80.3319]], // Agra-Lucknow Exp + NH19 Kanpur
+  "LKO-PAT": [[26.7922, 82.1998], [25.3176, 82.9739], [25.5647, 83.9777]], // Ayodhya, Varanasi, Buxar
+  "PAT-KOL": [[25.1388, 85.8753], [24.4826, 86.6978], [23.6889, 86.9661], [23.5204, 87.3119]], // Deoghar, Asansol, Durgapur
+  "KOL-GAU": [[23.2324, 87.8615], [25.0112, 88.1363], [26.7271, 88.3953], [26.5415, 90.5484]], // Malda, Siliguri, Bongaigaon
+  "CHN-VTZ": [[14.4426, 79.9865], [15.5057, 80.0499], [16.5062, 80.6480], [17.0005, 81.8040]], // NH16 Nellore, Ongole, Vijayawada, Rajahmundry
+  "VTZ-BBI": [[18.2949, 83.8938], [19.3149, 84.7941], [19.8135, 85.8312]], // NH16 Srikakulam, Berhampur, Khordha
+  "BBI-KOL": [[20.9320, 86.1360], [21.4934, 86.9135], [22.3400, 87.3200]], // NH16 Bhadrak, Balasore, Kharagpur
+  "BLR-CJB": [[12.7409, 77.8253], [12.1211, 78.1582], [11.6643, 78.1460], [11.3410, 77.7172]], // NH44/544 Hosur, Dharmapuri, Salem, Erode
+  "CJB-COK": [[10.7867, 76.6548], [10.5276, 76.2144], [10.1632, 76.3533]], // NH544 Palakkad, Thrissur, Aluva
+  "IDR-BHO": [[22.9676, 76.0534], [23.1250, 76.6500], [23.2000, 77.0800]], // SH18/NH46 Dewas, Ashta, Sehore
+  "BHO-NAG": [[22.7533, 77.7266], [22.4000, 77.7800], [21.9000, 77.9000]], // NH46 Hoshangabad, Betul
+  "HYD-VTZ": [[17.1439, 79.6239], [16.5062, 80.6480], [16.9891, 82.2475]], // NH65/16 Suryapet, Vijayawada, Kakinada bypass
+  "AMD-IDR": [[22.7560, 73.6160], [22.8330, 74.2500], [22.7660, 75.1000]], // NH47 Godhra, Dahod, Dhar
+  "BBI-NAG": [[21.4669, 83.9812], [21.2514, 81.6296], [21.1904, 81.2849], [21.1700, 79.6500]], // NH53 Sambalpur, Raipur, Durg, Bhandara
+};
+
+// Generates smooth natural highway curve between points
+function interpolateCurve(pts: [number, number][], numSteps: number = 6): [number, number][] {
+  const result: [number, number][] = [];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[Math.min(pts.length - 1, i + 2)];
+
+    for (let t = 0; t <= 1; t += 1 / numSteps) {
+      // Catmull-Rom spline interpolation
+      const t2 = t * t;
+      const t3 = t2 * t;
+
+      const lat = 0.5 * (
+        (2 * p1[0]) +
+        (-p0[0] + p2[0]) * t +
+        (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 +
+        (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3
+      );
+
+      const lon = 0.5 * (
+        (2 * p1[1]) +
+        (-p0[1] + p2[1]) * t +
+        (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 +
+        (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3
+      );
+
+      result.push([Number(lat.toFixed(5)), Number(lon.toFixed(5))]);
+    }
+  }
+  return result;
+}
+
 export function getRoadRoute(fromNameOrCode: string, toNameOrCode: string): [number, number][] | null {
-  const from = fromNameOrCode.toUpperCase();
-  const to = toNameOrCode.toUpperCase();
+  const from = fromNameOrCode.toUpperCase().trim();
+  const to = toNameOrCode.toUpperCase().trim();
   
-  // Try direct code match
+  // 1. Try direct code match from high-res road routes
   const codeKey = `${from}-${to}`;
   if (REAL_ROAD_ROUTES[codeKey]) return REAL_ROAD_ROUTES[codeKey].coordinates;
 
-  // Try finding by name
+  // 2. Try finding by name in pre-baked routes
   for (const r of Object.values(REAL_ROAD_ROUTES)) {
     if (
       (r.from.toUpperCase() === from || r.fromName.toUpperCase() === from) &&
@@ -20300,7 +20399,7 @@ export function getRoadRoute(fromNameOrCode: string, toNameOrCode: string): [num
     }
   }
 
-  // Reverse match
+  // 3. Reverse match in pre-baked routes
   for (const r of Object.values(REAL_ROAD_ROUTES)) {
     if (
       (r.from.toUpperCase() === to || r.fromName.toUpperCase() === to) &&
@@ -20310,5 +20409,36 @@ export function getRoadRoute(fromNameOrCode: string, toNameOrCode: string): [num
     }
   }
 
+  // 4. Match strategic National Highway pass-through corridors
+  const reverseKey = `${to}-${from}`;
+  if (HIGHWAY_PASS_THROUGHS[codeKey] || HIGHWAY_PASS_THROUGHS[reverseKey]) {
+    const fromCoord = PAN_INDIA_HUB_COORDS[from];
+    const toCoord = PAN_INDIA_HUB_COORDS[to];
+    if (fromCoord && toCoord) {
+      const isReverse = !HIGHWAY_PASS_THROUGHS[codeKey];
+      const intermediates = isReverse 
+        ? [...HIGHWAY_PASS_THROUGHS[reverseKey]].reverse()
+        : HIGHWAY_PASS_THROUGHS[codeKey];
+      const pts: [number, number][] = [fromCoord, ...intermediates, toCoord];
+      return interpolateCurve(pts, 5);
+    }
+  }
+
+  // 5. Dynamic Highway Arc interpolation for any pair of the 20 Pan-India Hubs
+  const c1 = PAN_INDIA_HUB_COORDS[from];
+  const c2 = PAN_INDIA_HUB_COORDS[to];
+  if (c1 && c2) {
+    // Generate realistic highway trajectory with subtle geographic arc
+    const midLat = (c1[0] + c2[0]) / 2;
+    const midLon = (c1[1] + c2[1]) / 2;
+    // Highway slight natural deflection along terrain
+    const dLat = c2[0] - c1[0];
+    const dLon = c2[1] - c1[1];
+    const bendLat = midLat + (-dLon * 0.08);
+    const bendLon = midLon + (dLat * 0.08);
+    return interpolateCurve([c1, [bendLat, bendLon], c2], 8);
+  }
+
   return null;
 }
+

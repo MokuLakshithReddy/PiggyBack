@@ -112,7 +112,21 @@ export class CandidateGenerator {
           (truck.currentLocation.toLowerCase() === "bengaluru" && pickupLoc === "chennai") ||
           (truck.currentLocation.toLowerCase() === "chennai" && pickupLoc === "bengaluru") ||
           (truck.currentLocation.toLowerCase() === "hyderabad" && pickupLoc === "nagpur") ||
-          (truck.currentLocation.toLowerCase() === "nagpur" && pickupLoc === "hyderabad"));
+          (truck.currentLocation.toLowerCase() === "nagpur" && pickupLoc === "hyderabad") ||
+          (truck.currentLocation.toLowerCase() === "mumbai" && pickupLoc === "ahmedabad") ||
+          (truck.currentLocation.toLowerCase() === "ahmedabad" && pickupLoc === "mumbai") ||
+          (truck.currentLocation.toLowerCase() === "delhi" && pickupLoc === "chandigarh") ||
+          (truck.currentLocation.toLowerCase() === "chandigarh" && pickupLoc === "delhi") ||
+          (truck.currentLocation.toLowerCase() === "delhi" && pickupLoc === "jaipur") ||
+          (truck.currentLocation.toLowerCase() === "jaipur" && pickupLoc === "delhi") ||
+          (truck.currentLocation.toLowerCase() === "lucknow" && pickupLoc === "patna") ||
+          (truck.currentLocation.toLowerCase() === "patna" && pickupLoc === "lucknow") ||
+          (truck.currentLocation.toLowerCase() === "bhopal" && pickupLoc === "indore") ||
+          (truck.currentLocation.toLowerCase() === "indore" && pickupLoc === "bhopal") ||
+          (truck.currentLocation.toLowerCase() === "coimbatore" && pickupLoc === "kochi") ||
+          (truck.currentLocation.toLowerCase() === "kochi" && pickupLoc === "coimbatore") ||
+          (truck.currentLocation.toLowerCase() === "visakhapatnam" && pickupLoc === "bhubaneswar") ||
+          (truck.currentLocation.toLowerCase() === "bhubaneswar" && pickupLoc === "visakhapatnam"));
 
       if (isCorridorMatch) {
         const detourKm = 45;
@@ -168,7 +182,25 @@ export class CandidateGenerator {
 
     // 3. Multi-hop transfer candidate generation (Leg 1 to intermediate hub -> Leg 2 to destination)
     // Identify intermediate hubs that connect both
-    const intermediateHubs = ["Bengaluru", "Chennai", "Pune", "Nagpur", "Hyderabad", "Delhi", "Mumbai"];
+    const intermediateHubs = [
+      "Bengaluru",
+      "Chennai",
+      "Pune",
+      "Nagpur",
+      "Hyderabad",
+      "Delhi",
+      "Mumbai",
+      "Kolkata",
+      "Ahmedabad",
+      "Jaipur",
+      "Lucknow",
+      "Patna",
+      "Bhubaneswar",
+      "Visakhapatnam",
+      "Indore",
+      "Bhopal",
+      "Coimbatore",
+    ];
     for (const interHub of intermediateHubs) {
       if (interHub.toLowerCase() === pickupLoc || interHub.toLowerCase() === destLoc) continue;
 

@@ -14,6 +14,7 @@ import {
   Package,
   Radio,
   RefreshCw,
+  Route,
   ShieldAlert,
   Truck as TruckIcon,
   Zap,
@@ -37,6 +38,7 @@ export default function ControlTowerPage() {
   const [trucks, setTrucks] = useState<Truck[]>([]);
   const [shipments, setShipments] = useState<StaffShipment[]>([]);
   const [selectedHub, setSelectedHub] = useState<Hub | null>(null);
+  const [selectedPathId, setSelectedPathId] = useState<string | null>(null);
   const [isSolving, setIsSolving] = useState<string | null>(null);
 
   const loadData = () => {
@@ -63,40 +65,50 @@ export default function ControlTowerPage() {
     setTimeout(() => {
       try {
         stateManager.solveRecovery(shipmentId);
-        router.push(`/staff/recovery/${shipmentId}`);
+        loadData();
       } catch (e) {
-        console.error(e);
+        console.error("Quick solve error:", e);
+      } finally {
         setIsSolving(null);
       }
     }, 400);
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col bg-background text-foreground selection:bg-accent selection:text-white">
       <Navbar />
 
       {/* Control Tower Sub-Header */}
-      <div className="bg-surface/50 border-b border-border/60 px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div className="border-b border-border/80 bg-surface/80 px-6 py-4 flex flex-wrap items-center justify-between gap-4 backdrop-blur-md sticky top-16 z-30 shadow-xs">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 text-accent font-mono text-sm font-semibold tracking-wider">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-            CONTROL TOWER // REAL GEOGRAPHIC DIGITAL TWIN
+          <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse ring-4 ring-emerald-500/20" />
+          <div>
+            <h1 className="text-lg font-bold tracking-tight text-foreground flex items-center gap-2">
+              Pan-India MOSAIC Control Tower
+              <span className="text-xs font-mono font-normal px-2 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/25">
+                v2.4 Telemetry
+              </span>
+            </h1>
+            <p className="text-xs text-muted">
+              Live National Freight Operations · 20 Hub Logistics Grid · GPS High-Frequency Feed
+            </p>
           </div>
-          <span className="text-xs text-muted border-l border-border/80 pl-3 hidden md:inline">
-            Active Nodes: {hubs.length} Hubs · {trucks.length} Fleet Trucks · {shipments.length} Monitored Consignments
-          </span>
         </div>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/judge"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 transition-colors"
-          >
-            <ShieldAlert className="w-3.5 h-3.5" /> Inject Disruption (Judge Mode)
-          </Link>
           <button
-            onClick={loadData}
-            className="p-1.5 rounded-lg border border-border/70 hover:bg-surface text-muted hover:text-foreground transition-colors"
+            onClick={() => router.push("/staff/dashboard")}
+            className="px-3.5 py-1.5 rounded-xl text-xs font-medium border border-border/80 hover:bg-surface text-foreground transition-colors"
+          >
+            Incident Dashboard
+          </button>
+          <button
+            onClick={() => {
+              loadData();
+              setSelectedHub(null);
+              setSelectedPathId(null);
+            }}
+            className="p-2 rounded-xl border border-border/80 hover:bg-surface text-muted hover:text-foreground transition-colors"
             title="Refresh state"
           >
             <RefreshCw className="w-4 h-4" />
@@ -112,11 +124,11 @@ export default function ControlTowerPage() {
             <div className="flex items-center gap-2">
               <Navigation className="w-4 h-4 text-accent" />
               <h2 className="text-sm font-semibold tracking-tight">
-                Live Geospatial Network Map (Leaflet / OpenStreetMap / CartoDB)
+                Live Geospatial Network Map (20 Hubs · Interactive Jury Path Inspection)
               </h2>
             </div>
             <div className="text-xs font-mono text-muted">
-              Interactive Map · Pan & Zoom Enabled
+              Click any route to isolate &amp; highlight
             </div>
           </div>
 
@@ -129,6 +141,8 @@ export default function ControlTowerPage() {
               selectedHub={selectedHub}
               onSelectHub={setSelectedHub}
               onQuickSolve={handleQuickSolve}
+              selectedPathId={selectedPathId}
+              onSelectPath={(p) => setSelectedPathId(p?.id || null)}
             />
           </div>
 
@@ -247,12 +261,38 @@ export default function ControlTowerPage() {
                     </div>
 
                     <div className="flex items-center justify-between gap-2 pt-2 border-t border-border/60">
-                      <Link
-                        href={`/staff/incident/${s.id}`}
-                        className="text-xs text-muted hover:text-foreground transition-colors font-medium"
-                      >
-                        Details
-                      </Link>
+                      <div className="flex items-center gap-3">
+                        <Link
+                          href={`/staff/incident/${s.id}`}
+                          className="text-xs text-muted hover:text-foreground transition-colors font-medium"
+                        >
+                          Details
+                        </Link>
+                        <button
+                          onClick={() => {
+                            const trk = trucks.find(
+                              (t) =>
+                                t.currentLocation.toLowerCase() === s.currentLocation.toLowerCase() ||
+                                t.destination.toLowerCase() === s.destination.toLowerCase() ||
+                                t.schedule.some(
+                                  (seg) => seg.fromNode.toLowerCase() === s.currentLocation.toLowerCase()
+                                )
+                            );
+                            if (trk && trk.schedule[0]) {
+                              setSelectedPathId(`${trk.id}-${trk.schedule[0].fromNode}-${trk.schedule[0].toNode}`);
+                            } else {
+                              const hub = hubs.find(
+                                (h) => h.name.toLowerCase() === s.currentLocation.toLowerCase()
+                              );
+                              if (hub) setSelectedHub(hub);
+                            }
+                          }}
+                          className="flex items-center gap-1 text-[11px] font-mono text-orange-400 hover:text-orange-300 transition-colors cursor-pointer"
+                          title="Isolate & highlight carrier corridor on map"
+                        >
+                          <Route className="w-3 h-3" /> Highlight
+                        </button>
+                      </div>
                       <button
                         onClick={() => handleQuickSolve(s.id)}
                         disabled={isSolving === s.id}
