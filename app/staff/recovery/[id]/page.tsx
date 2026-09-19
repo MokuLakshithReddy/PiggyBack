@@ -466,23 +466,23 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
 
       {/* ESG Carbon Footprint & Financial Savings Card */}
       {!isNoFeasible && primaryPlan && (
-        <div className="mt-8 bg-gradient-to-br from-emerald-950/20 via-surface/80 to-surface border border-emerald-500/30 rounded-3xl p-6 md:p-8 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/80">
+        <div className="mt-8 bg-surface border border-emerald-600/30 rounded-3xl p-6 md:p-8 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border">
             <div>
-              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 mb-1">
-                <Leaf className="w-4 h-4 text-emerald-400" />
+              <div className="flex items-center gap-2 text-xs font-mono font-bold uppercase tracking-wider text-emerald-700 mb-1.5">
+                <Leaf className="w-4 h-4 text-emerald-600" />
                 <span>GREEN LOGISTICS &amp; RESOURCE UTILIZATION ROI</span>
               </div>
               <h3 className="text-xl md:text-2xl font-bold tracking-tight text-foreground">
                 ESG Sustainability &amp; Cost Avoidance Impact
               </h3>
-              <p className="text-xs text-muted mt-1">
+              <p className="text-xs text-muted mt-1 font-medium">
                 Measured against single-use dedicated emergency charter van dispatched on the same corridor.
               </p>
             </div>
 
-            <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold text-emerald-300 shrink-0">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-600/30 px-4 py-2 rounded-xl text-xs font-mono font-bold text-emerald-800 shrink-0 shadow-xs">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
               <span>GREEN FREIGHT CERTIFIED</span>
             </div>
           </div>
@@ -490,73 +490,73 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
           {/* 4-stat metrics grid */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
             {/* Metric 1: Cost Savings */}
-            <div className="bg-background/80 border border-border/70 rounded-2xl p-4">
+            <div className="bg-background border border-border rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-muted font-medium flex items-center gap-1.5">
-                  <DollarSign className="w-3.5 h-3.5 text-accent" /> Net Cost Savings
+                <span className="text-xs text-foreground font-bold flex items-center gap-1.5">
+                  <DollarSign className="w-4 h-4 text-accent" /> Net Cost Savings
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent/10 text-accent font-bold">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent/15 text-accent font-black">
                   {primaryPlan.costSavingsPercent || 78}% SAVED
                 </span>
               </div>
               <p className="text-2xl font-black text-foreground">
                 ${((primaryPlan.baselineCharterCost || 2850) - primaryPlan.incrementalCost).toLocaleString()}
               </p>
-              <p className="text-[11px] text-muted font-mono mt-1">
+              <p className="text-xs text-muted font-mono mt-1 font-medium">
                 ${primaryPlan.incrementalCost} piggyback vs ${(primaryPlan.baselineCharterCost || 2850).toLocaleString()} charter
               </p>
             </div>
 
             {/* Metric 2: CO2 Avoided */}
-            <div className="bg-background/80 border border-border/70 rounded-2xl p-4">
+            <div className="bg-background border border-border rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-muted font-medium flex items-center gap-1.5">
-                  <Leaf className="w-3.5 h-3.5 text-emerald-400" /> CO₂ Emissions Avoided
+                <span className="text-xs text-foreground font-bold flex items-center gap-1.5">
+                  <Leaf className="w-4 h-4 text-emerald-600" /> CO₂ Avoided
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-bold">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-black">
                   ZERO DIRECT EMISSION
                 </span>
               </div>
-              <p className="text-2xl font-black text-emerald-400">
+              <p className="text-2xl font-black text-emerald-700">
                 {(primaryPlan.co2SavedKg || 420).toLocaleString()} kg CO₂
               </p>
-              <p className="text-[11px] text-muted font-mono mt-1">
+              <p className="text-xs text-muted font-mono mt-1 font-medium">
                 Shared vehicle load avoids dedicated diesel burn
               </p>
             </div>
 
             {/* Metric 3: Diesel Fuel Conserved */}
-            <div className="bg-background/80 border border-border/70 rounded-2xl p-4">
+            <div className="bg-background border border-border rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-muted font-medium flex items-center gap-1.5">
-                  <Activity className="w-3.5 h-3.5 text-blue-400" /> Diesel Conserved
+                <span className="text-xs text-foreground font-bold flex items-center gap-1.5">
+                  <Activity className="w-4 h-4 text-blue-600" /> Diesel Conserved
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 font-bold">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-black">
                   0.28 L / KM
                 </span>
               </div>
               <p className="text-2xl font-black text-foreground">
                 {(primaryPlan.fuelSavedLiters || 155).toLocaleString()} Liters
               </p>
-              <p className="text-[11px] text-muted font-mono mt-1">
+              <p className="text-xs text-muted font-mono mt-1 font-medium">
                 Saved by consolidating onto scheduled carrier
               </p>
             </div>
 
             {/* Metric 4: Deadhead Miles Averted */}
-            <div className="bg-background/80 border border-border/70 rounded-2xl p-4">
+            <div className="bg-background border border-border rounded-2xl p-5 shadow-xs">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-muted font-medium flex items-center gap-1.5">
-                  <Navigation className="w-3.5 h-3.5 text-purple-400" /> Empty Miles Averted
+                <span className="text-xs text-foreground font-bold flex items-center gap-1.5">
+                  <Navigation className="w-4 h-4 text-purple-600" /> Empty Miles Averted
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 font-bold">
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-black">
                   NO DEADHEAD
                 </span>
               </div>
               <p className="text-2xl font-black text-foreground">
                 {(primaryPlan.emptyMilesAvertedKm || 510).toLocaleString()} km
               </p>
-              <p className="text-[11px] text-muted font-mono mt-1">
+              <p className="text-xs text-muted font-mono mt-1 font-medium">
                 Zero empty single-purpose deadhead transit
               </p>
             </div>
