@@ -377,10 +377,14 @@ If you are evaluating this project for the hackathon, follow this 5-step demonst
 
 ---
 
-## 👥 Team & Submission Details
+## 👥 Team & Contributors
 - **Hackathon:** VNR VJIET Logistics Hackathon
 - **Problem Statement:** `SH-205` — *Intelligent Shipment Piggybacking*
 - **Repository:** [https://github.com/MokuLakshithReddy/PiggyBack.git](https://github.com/MokuLakshithReddy/PiggyBack.git)
+
+### 🌟 Project Contributors
+- **[@MokuLakshithReddy](https://github.com/MokuLakshithReddy)** — Project Lead & Architect
+- **[@CodeWithRJ006](https://github.com/CodeWithRJ006)** — Core Contributor
 
 ---
 *Built with precision for autonomous, zero-carbon, intelligent logistics recovery.*
