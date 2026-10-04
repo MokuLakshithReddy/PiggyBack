@@ -2,6 +2,16 @@
   "name": "piggyback",
   "version": "0.1.0",
   "private": true,
+  "contributors": [
+    {
+      "name": "MokuLakshithReddy",
+      "url": "https://github.com/MokuLakshithReddy"
+    },
+    {
+      "name": "CodeWithRJ006",
+      "url": "https://github.com/CodeWithRJ006"
+    }
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
