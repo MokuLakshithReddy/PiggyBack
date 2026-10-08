@@ -35,27 +35,28 @@ export class Graph {
       throw new Error(`Cannot add edge ${edge.id}: source (${edge.source}) or target (${edge.target}) does not exist`);
     }
 
-    this.edges.set(edge.id, { ...edge });
+    const storedEdge: GraphEdge = { ...edge };
+    this.edges.set(storedEdge.id, storedEdge);
 
-    if (!this.adjacency.has(edge.source)) {
-      this.adjacency.set(edge.source, new Map());
+    if (!this.adjacency.has(storedEdge.source)) {
+      this.adjacency.set(storedEdge.source, new Map());
     }
-    this.adjacency.get(edge.source)!.set(edge.target, edge);
+    this.adjacency.get(storedEdge.source)!.set(storedEdge.target, storedEdge);
 
-    if (edge.bidirectional) {
-      const reverseEdgeId = `${edge.id}_rev`;
+    if (storedEdge.bidirectional) {
+      const reverseEdgeId = `${storedEdge.id}_rev`;
       const reverseEdge: GraphEdge = {
-        ...edge,
+        ...storedEdge,
         id: reverseEdgeId,
-        source: edge.target,
-        target: edge.source,
+        source: storedEdge.target,
+        target: storedEdge.source,
       };
       this.edges.set(reverseEdgeId, reverseEdge);
 
-      if (!this.adjacency.has(edge.target)) {
-        this.adjacency.set(edge.target, new Map());
+      if (!this.adjacency.has(storedEdge.target)) {
+        this.adjacency.set(storedEdge.target, new Map());
       }
-      this.adjacency.get(edge.target)!.set(edge.source, reverseEdge);
+      this.adjacency.get(storedEdge.target)!.set(storedEdge.source, reverseEdge);
     }
   }
 

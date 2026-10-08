@@ -142,6 +142,17 @@ export type DecisionReceipt = {
   hash: string;
 };
 
+export type ShadowGuaranteeType = "EDGE_DISJOINT" | "PENALIZED_OVERLAP" | "NONE";
+
+export interface ShadowGuaranteeMetrics {
+  guarantee: ShadowGuaranteeType;
+  overlappingEdgeIds: string[];
+  overlapPercentage: number;
+  sharedDistanceKm: number;
+  independentDistanceKm: number;
+  quantitativeAudit: string;
+}
+
 export type RecoveryPlan = {
   planId: string;
   shipmentId: string;
@@ -163,6 +174,7 @@ export type RecoveryPlan = {
   emptyMilesAvertedKm?: number;
   baselineCharterCost?: number;
   costSavingsPercent?: number;
+  shadowGuarantee?: ShadowGuaranteeMetrics;
 };
 
 export type DisruptionType =

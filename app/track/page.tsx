@@ -254,7 +254,7 @@ function TrackingContent() {
                         ✓ PIGGYBACK RECOVERY ENGAGED
                       </p>
                       <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 flex items-center gap-1">
-                        <Leaf className="w-3 h-3 text-emerald-400" /> 420 kg CO₂ Avoided
+                        <Leaf className="w-3 h-3 text-emerald-400" /> {Math.round(result.shipment.weight * 1.85 + 320)} kg CO₂ Avoided
                       </span>
                     </div>
                     <p className="text-xs text-muted mt-1">

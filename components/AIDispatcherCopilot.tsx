@@ -51,7 +51,7 @@ export function AIDispatcherCopilot({
     {
       id: "esg_savings",
       question: "What are the financial and ESG environmental savings?",
-      answer: `Piggybacking on an active scheduled route reduces operational costs from ~$2,850 (dedicated emergency single-use charter) down to $${plan.incrementalCost} (marginal incremental detour). This achieves a ${plan.costSavingsPercent || 78}% net cost reduction, eliminates ~${plan.co2SavedKg || 420} kg of carbon emissions, and avoids ~${plan.emptyMilesAvertedKm || 550} km of empty deadhead diesel driving.`,
+      answer: `Piggybacking on an active scheduled route reduces operational costs from ₹${(plan.baselineCharterCost || 18500).toLocaleString()} (dedicated emergency single-use charter per ISO 14083) down to ₹${plan.incrementalCost.toLocaleString()} (marginal incremental detour). This achieves a ${plan.costSavingsPercent || 82}% net cost reduction, eliminates ~${(plan.co2SavedKg || 390).toLocaleString()} kg of carbon emissions, and avoids ~${(plan.emptyMilesAvertedKm || 550).toLocaleString()} km of empty deadhead diesel driving.`,
       badge: "ESG & ROI",
       badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
     },

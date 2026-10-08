@@ -26,6 +26,18 @@ export interface ScoredPlan {
   isParetoOptimal: boolean;
   paretoRank: number; // 1 = non-dominated frontier, 2 = 2nd frontier, etc.
   softPenalty: number;
+  shadowGuarantee?: ShadowGuaranteeMetrics;
+}
+
+export type ShadowGuaranteeType = "EDGE_DISJOINT" | "PENALIZED_OVERLAP" | "NONE";
+
+export interface ShadowGuaranteeMetrics {
+  guarantee: ShadowGuaranteeType;
+  overlappingEdgeIds: string[];
+  overlapPercentage: number; // 0% for edge-disjoint, >0% for penalized overlap
+  sharedDistanceKm: number;
+  independentDistanceKm: number;
+  quantitativeAudit: string;
 }
 
 export interface TradeOffItem {
@@ -50,6 +62,7 @@ export interface OptimizationResult {
   status: "OPTIMAL" | "FEASIBLE" | "INFEASIBLE";
   primaryPlan: ScoredPlan | null;
   shadowPlan: ScoredPlan | null;
+  shadowGuarantee?: ShadowGuaranteeMetrics;
   paretoFrontier: ScoredPlan[];
   allFeasiblePlans: ScoredPlan[];
   infeasiblePlans: FilterResult[];

@@ -21,7 +21,9 @@
     "test:audit": "npx tsx scripts/audit-mathematical-proofs.ts",
     "test:flagship": "npx tsx scripts/verify-core-optimization.ts",
     "test:evaluation": "npx tsx scripts/run-flagship-evaluation.ts",
-    "test:all": "npx tsx scripts/test-runner.ts && npx tsx scripts/audit-mathematical-proofs.ts && npx tsx scripts/verify-core-optimization.ts && npx tsx scripts/run-flagship-evaluation.ts"
+    "eval:diversity": "npx tsx scripts/run-diversity-experiment.ts",
+    "eval:scale": "npx tsx scripts/run-scale-benchmark.ts",
+    "test:all": "npx tsx scripts/test-runner.ts && npx tsx scripts/audit-mathematical-proofs.ts && npx tsx scripts/verify-core-optimization.ts && npx tsx scripts/run-flagship-evaluation.ts && npx tsx scripts/run-diversity-experiment.ts && npx tsx scripts/run-scale-benchmark.ts"
   },
   "dependencies": {
     "@types/leaflet": "^1.9.22",

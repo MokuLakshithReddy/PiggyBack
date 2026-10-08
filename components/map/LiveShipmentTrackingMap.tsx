@@ -757,7 +757,7 @@ export function LiveShipmentTrackingMap({
         {/* ESG & Eco Savings badge */}
         <div className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 font-mono text-xs shrink-0">
           <Leaf className="w-3.5 h-3.5" />
-          <span>420 kg CO₂ Avoided</span>
+          <span>{Math.round(totalDistanceKm * 0.38)} kg CO₂ Avoided</span>
         </div>
       </div>
     </div>

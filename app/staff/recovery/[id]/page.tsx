@@ -442,13 +442,20 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
                   <div className="flex items-center gap-2 mb-1.5">
                     <span className="w-2 h-2 rounded-full bg-blue-500" />
                     <span className="font-mono text-xs font-bold text-blue-600 tracking-wider uppercase">
-                      STRATEGY: SHADOW (INDEPENDENT REDUNDANCY)
+                      STRATEGY: SHADOW ({shadowPlan.shadowGuarantee?.guarantee || "INDEPENDENT REDUNDANCY"})
                     </span>
                   </div>
 
                   <h2 className="text-xl font-bold tracking-tight text-foreground">
                     Carrier Vehicle: <span className="font-mono text-blue-600">{shadowPlan.vehicleId}</span>
                   </h2>
+
+                  {shadowPlan.shadowGuarantee && (
+                    <div className="mt-2 text-xs font-mono px-3 py-1.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-between">
+                      <span>{shadowPlan.shadowGuarantee.quantitativeAudit}</span>
+                      <span className="font-bold">{shadowPlan.shadowGuarantee.overlapPercentage}% Overlap</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* 3-Pillar Minimalist Metric Strip */}

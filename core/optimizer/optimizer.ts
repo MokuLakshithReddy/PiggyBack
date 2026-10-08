@@ -183,6 +183,7 @@ export class PiggyBackOptimizer {
       status: "OPTIMAL",
       primaryPlan,
       shadowPlan,
+      shadowGuarantee: shadowPlan?.shadowGuarantee,
       paretoFrontier: frontier,
       allFeasiblePlans: rankedPlans,
       infeasiblePlans: infeasible,

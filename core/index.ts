@@ -10,3 +10,4 @@ export * from "./simulation/simulator";
 export * from "./replanning/types";
 export * from "./replanning/replanner";
 export * from "./evaluation";
+export * from "./models/cost-emissions";

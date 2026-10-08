@@ -42,7 +42,9 @@ export function CustomerNotificationModal({
   const etaFormatted = plan?.eta
     ? new Date(plan.eta).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })
     : "04:30 PM";
-  const co2Avoided = plan?.co2SavedKg || 420;
+  const co2Avoided =
+    plan?.co2SavedKg ||
+    (shipment?.weight ? Math.round(shipment.weight * 1.85 + 280) : 380);
 
   // Clean phone number (digits only)
   const cleanPhone = phoneNumber.replace(/\D/g, "");

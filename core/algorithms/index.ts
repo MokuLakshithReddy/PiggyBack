@@ -4,3 +4,4 @@ export * from "./dijkstra";
 export * from "./astar";
 export * from "./greedy";
 export * from "./multi-source";
+export * from "./yen-k-paths";
