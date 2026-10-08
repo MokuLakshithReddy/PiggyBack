@@ -23,7 +23,11 @@
     "test:evaluation": "npx tsx scripts/run-flagship-evaluation.ts",
     "eval:diversity": "npx tsx scripts/run-diversity-experiment.ts",
     "eval:scale": "npx tsx scripts/run-scale-benchmark.ts",
-    "test:all": "npx tsx scripts/test-runner.ts && npx tsx scripts/audit-mathematical-proofs.ts && npx tsx scripts/verify-core-optimization.ts && npx tsx scripts/run-flagship-evaluation.ts && npx tsx scripts/run-diversity-experiment.ts && npx tsx scripts/run-scale-benchmark.ts"
+    "eval:baselines": "npx tsx scripts/run-baselines.ts",
+    "eval:shadow": "npx tsx scripts/run-shadow-eval.ts",
+    "eval:replanning": "npx tsx scripts/run-replanning-benchmark.ts",
+    "test:properties": "npx tsx scripts/run-1000-property-tests.ts",
+    "test:all": "npx tsx scripts/test-runner.ts && npx tsx scripts/audit-mathematical-proofs.ts && npx tsx scripts/verify-core-optimization.ts && npx tsx scripts/run-flagship-evaluation.ts && npx tsx scripts/run-diversity-experiment.ts && npx tsx scripts/run-scale-benchmark.ts && npx tsx scripts/run-baselines.ts && npx tsx scripts/run-shadow-eval.ts && npx tsx scripts/run-replanning-benchmark.ts && npx tsx scripts/run-1000-property-tests.ts"
   },
   "dependencies": {
     "@types/leaflet": "^1.9.22",

@@ -4,3 +4,6 @@ export * from "./property-tests";
 export * from "./failure-analysis";
 export * from "./diversity-experiment";
 export * from "./large-scale-evaluation";
+export * from "./baselines";
+export * from "./shadow-eval";
+export * from "./replanning-benchmark";

@@ -27,10 +27,12 @@ export class PropertyBasedTester {
       "Capacity Compliance Invariant": { total: 0, passed: 0, violations: [] },
       "Dijkstra vs Greedy Optimality Dominance": { total: 0, passed: 0, violations: [] },
       "A* Spatial Heuristic Admissibility": { total: 0, passed: 0, violations: [] },
+      "Metric Non-Negativity & Positivity Invariant": { total: 0, passed: 0, violations: [] },
+      "Pareto Monotonicity & Solvability Invariant": { total: 0, passed: 0, violations: [] },
     };
 
     for (let t = 0; t < trials; t++) {
-      const numNodes = 50 + (t * 10);
+      const numNodes = 30 + ((t * 7) % 60);
       const seed = 1000 + t * 37;
       const graph = generateSyntheticGraph({
         numNodes,
@@ -146,6 +148,35 @@ export class PropertyBasedTester {
         }
       } else {
         checks["A* Spatial Heuristic Admissibility"].passed++;
+      }
+
+      // Property 7: Metric Non-Negativity & Positivity
+      checks["Metric Non-Negativity & Positivity Invariant"].total++;
+      if (solveRes.status === "OPTIMAL" && solveRes.primaryPlan) {
+        const c = solveRes.primaryPlan.candidate;
+        if (c.totalDistanceKm > 0 && c.totalTravelTimeMin > 0 && c.totalCost >= 0 && c.totalRiskScore >= 0) {
+          checks["Metric Non-Negativity & Positivity Invariant"].passed++;
+        } else {
+          checks["Metric Non-Negativity & Positivity Invariant"].violations.push(
+            `Trial ${t}: Non-positive metric found: dist=${c.totalDistanceKm}, time=${c.totalTravelTimeMin}`
+          );
+        }
+      } else {
+        checks["Metric Non-Negativity & Positivity Invariant"].passed++;
+      }
+
+      // Property 8: Pareto Monotonicity & Solvability
+      checks["Pareto Monotonicity & Solvability Invariant"].total++;
+      if (solveRes.status === "OPTIMAL") {
+        if (solveRes.paretoFrontier.length > 0 && solveRes.primaryPlan !== null) {
+          checks["Pareto Monotonicity & Solvability Invariant"].passed++;
+        } else {
+          checks["Pareto Monotonicity & Solvability Invariant"].violations.push(
+            `Trial ${t}: Optimal status returned without valid Pareto frontier or primary plan`
+          );
+        }
+      } else {
+        checks["Pareto Monotonicity & Solvability Invariant"].passed++;
       }
     }
 

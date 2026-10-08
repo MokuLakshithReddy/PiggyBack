@@ -1,11 +1,14 @@
 import { CandidateRoute, RecoveryPlan, ShadowGuaranteeMetrics, StaffShipment } from "./types";
 import { LogisticsCostModel, CarbonEmissionModel } from "../../core/models/cost-emissions";
+import { computeParetoFrontier } from "../../core/optimizer/pareto";
+import { ScoredPlan } from "../../core/optimizer/types";
 
 export type OptimizationResult = {
   status: "OPTIMAL" | "FEASIBLE" | "NO_FEASIBLE_PIGGYBACK";
   primaryPlan: RecoveryPlan | null;
   shadowPlan: RecoveryPlan | null;
   shadowGuarantee?: ShadowGuaranteeMetrics;
+  paretoFrontier?: RecoveryPlan[];
   rejectionBreakdown: Record<string, number>;
   totalCandidates: number;
   feasibleCandidates: number;
@@ -231,6 +234,45 @@ export class LexicographicOptimizer {
       };
     }
 
+    // Compute canonical Pareto Frontier across feasible candidates
+    const scoredPlans: ScoredPlan[] = feasible.map((c) => ({
+      id: c.id,
+      candidate: {
+        source: c.pickupHub,
+        target: c.dropoffHub,
+        path: [c.pickupHub, ...(c.transferHub ? [c.transferHub] : []), c.dropoffHub],
+        edges: [],
+        totalDistanceKm: c.distance,
+        totalTravelTimeMin: c.delayMinutes + 120,
+        totalRiskScore: c.transfers * 0.1 + (c.isTransfer ? 0.2 : 0.05),
+        totalCost: c.incrementalCost,
+        feasible: true,
+        metrics: { algorithm: "MOSAIC-Lexico", executionTimeMs: 0, nodesExplored: 0, edgesEvaluated: 0 },
+      },
+      compositeScore: c.incrementalCost + c.distance * 0.1,
+      objectiveScores: { time: c.delayMinutes, cost: c.incrementalCost, risk: 0.1, distance: c.distance, sustainability: 0.9 },
+      normalizedScores: { time: 0, cost: 0, risk: 0, distance: 0, sustainability: 0 },
+      isParetoOptimal: false,
+      paretoRank: 1,
+      softPenalty: 0,
+    }));
+    const { frontier } = computeParetoFrontier(scoredPlans);
+    const paretoCandidateIds = new Set(frontier.map((f) => f.id));
+    const paretoFrontier: RecoveryPlan[] = ranked
+      .filter((c) => paretoCandidateIds.has(c.id))
+      .map((c) => (c.id === bestCandidate.id ? primaryPlan : shadowPlan?.candidate.id === c.id ? shadowPlan : {
+        ...primaryPlan,
+        planId: `PLAN-PAR-${c.id}`,
+        vehicleId: c.vehicleId,
+        pickupHub: c.pickupHub,
+        dropoffHub: c.dropoffHub,
+        eta: c.dropoffTime,
+        incrementalCost: c.incrementalCost,
+        transfers: c.transfers,
+        transferHub: c.transferHub,
+        candidate: c,
+      }));
+
     const solveTimeMs = Math.round(performance.now() - startTime);
 
     return {
@@ -238,6 +280,7 @@ export class LexicographicOptimizer {
       primaryPlan,
       shadowPlan,
       shadowGuarantee,
+      paretoFrontier,
       rejectionBreakdown,
       totalCandidates: this.allCandidates.length,
       feasibleCandidates: feasible.length,
