@@ -50,17 +50,22 @@ export class HardConstraintFilter {
       return { isFeasible: false, reason: RejectionReason.MISSED_DEPARTURE };
     }
 
-    // 3. Capacity Check (Weight & Volume)
-    if (availableWeight < shipment.weight || availableVolume < shipment.volume) {
+    // 3. Payload Weight Capacity Check
+    if (availableWeight < shipment.weight) {
       return { isFeasible: false, reason: RejectionReason.INSUFFICIENT_CAPACITY };
     }
 
-    // 4. SLA Deadline Feasibility
+    // 4. Cubic Volume Capacity Check
+    if (availableVolume < shipment.volume) {
+      return { isFeasible: false, reason: RejectionReason.INSUFFICIENT_VOLUME };
+    }
+
+    // 5. SLA Deadline Feasibility
     if (dTime > slaTime) {
       return { isFeasible: false, reason: RejectionReason.DEADLINE_IMPOSSIBLE };
     }
 
-    // 5. Hub Operational Window (Maintenance / Closure)
+    // 6. Hub Operational State (Maintenance / Closure)
     const pClean = params.pickupHub.split(" ")[0].trim();
     const dClean = params.dropoffHub.split(" ")[0].trim();
     const isPickupOperational =
@@ -77,7 +82,7 @@ export class HardConstraintFilter {
       true;
 
     if (isPickupOperational === false || isDropoffOperational === false) {
-      return { isFeasible: false, reason: RejectionReason.HUB_UNAVAILABLE };
+      return { isFeasible: false, reason: RejectionReason.HUB_OFFLINE };
     }
 
     const pDate = new Date(pickupTime);
@@ -95,18 +100,22 @@ export class HardConstraintFilter {
       hubMaintenanceWindows[params.dropoffHub.toLowerCase()];
 
     if (pickupHubWindow && pHour >= pickupHubWindow.startHour && pHour < pickupHubWindow.endHour) {
-      return { isFeasible: false, reason: RejectionReason.HUB_UNAVAILABLE };
+      return { isFeasible: false, reason: RejectionReason.HUB_OFFLINE };
     }
     if (dropoffHubWindow && dHour >= dropoffHubWindow.startHour && dHour < dropoffHubWindow.endHour) {
-      return { isFeasible: false, reason: RejectionReason.HUB_UNAVAILABLE };
+      return { isFeasible: false, reason: RejectionReason.HUB_OFFLINE };
     }
 
-    // 6. Transfer Synchronization Feasibility (minimum 15 mins for cargo handling)
+    // 7. Transfer Synchronization Feasibility (minimum 15 mins for cargo handling)
     if (isTransfer && transferDurationMinutes < 15.0) {
       return { isFeasible: false, reason: RejectionReason.TRANSFER_TIME_IMPOSSIBLE };
     }
 
-    // 7. Downstream Cascade Delay Tolerance (max 30 mins)
+    // 8. Driver Duty Limits & Downstream Delay (Statutory 10 hours continuous limit or >30 min delay)
+    const transitDurationHours = (dTime - pTime) / 3600000;
+    if (transitDurationHours > 12.0) {
+      return { isFeasible: false, reason: RejectionReason.DUTY_LIMIT_EXCEEDED };
+    }
     if (downstreamDelayMinutes > 30.0) {
       return { isFeasible: false, reason: RejectionReason.DOWNSTREAM_DELAY_EXCEEDED };
     }

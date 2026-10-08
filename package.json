@@ -18,9 +18,10 @@
     "start": "next start",
     "lint": "eslint",
     "test": "npx tsx scripts/test-runner.ts",
+    "test:audit": "npx tsx scripts/audit-mathematical-proofs.ts",
     "test:flagship": "npx tsx scripts/verify-core-optimization.ts",
     "test:evaluation": "npx tsx scripts/run-flagship-evaluation.ts",
-    "test:all": "npx tsx scripts/test-runner.ts && npx tsx scripts/verify-core-optimization.ts && npx tsx scripts/run-flagship-evaluation.ts"
+    "test:all": "npx tsx scripts/test-runner.ts && npx tsx scripts/audit-mathematical-proofs.ts && npx tsx scripts/verify-core-optimization.ts && npx tsx scripts/run-flagship-evaluation.ts"
   },
   "dependencies": {
     "@types/leaflet": "^1.9.22",

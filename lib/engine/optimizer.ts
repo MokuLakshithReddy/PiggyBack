@@ -55,16 +55,30 @@ export class LexicographicOptimizer {
       };
     }
 
-    // Rank candidates using lexicographical comparison
+    const deadlineMs = new Date(this.shipment.deadline).getTime();
+
+    // Rank candidates using lexicographical comparison matching README:
+    // f(x) = [-SLA_Margin(x), Delay(x), Cost_marginal(x), Transfers(x), Distance(x)]
     const ranked = [...feasible].sort((a, b) => {
-      // Stage 1: SLA Compliance (0 delay beats any positive delay)
+      // Stage 1: Strict SLA Compliance (0 delay beats positive delay)
       const aOnTime = a.delayMinutes <= 0 ? 0 : 1;
       const bOnTime = b.delayMinutes <= 0 ? 0 : 1;
       if (aOnTime !== bOnTime) return aOnTime - bOnTime;
 
-      // Stage 2: Minimize delay minutes
-      if (Math.abs(a.delayMinutes - b.delayMinutes) > 0.01) {
-        return a.delayMinutes - b.delayMinutes;
+      // If delayed, minimize delay minutes
+      if (a.delayMinutes > 0 || b.delayMinutes > 0) {
+        if (Math.abs(a.delayMinutes - b.delayMinutes) > 0.01) {
+          return a.delayMinutes - b.delayMinutes;
+        }
+      }
+
+      // Stage 2: Maximize SLA Buffer Margin (earlier arrival provides resilience against road delays)
+      const aDropoff = new Date(a.dropoffTime).getTime();
+      const bDropoff = new Date(b.dropoffTime).getTime();
+      const aSlaMargin = deadlineMs - aDropoff;
+      const bSlaMargin = deadlineMs - bDropoff;
+      if (Math.abs(aSlaMargin - bSlaMargin) > 30 * 60000) {
+        return bSlaMargin - aSlaMargin; // Descending: larger safety buffer first
       }
 
       // Stage 3: Minimize incremental cost
@@ -84,7 +98,6 @@ export class LexicographicOptimizer {
     const bestCandidate = ranked[0];
 
     // Primary Plan
-    const deadlineMs = new Date(this.shipment.deadline).getTime();
     const dropoffMs = new Date(bestCandidate.dropoffTime).getTime();
     const slaMarginMinutes = Math.round((deadlineMs - dropoffMs) / 60000);
 

@@ -74,16 +74,48 @@ export function computeParetoFrontier(plans: ScoredPlan[]): {
     }
   }
 
-  // Identify Knee Point: solution on the frontier closest to the ideal Utopia point (0, 0, 0, 0)
+  // Identify Knee Point: Normalized strictly across the Pareto frontier's Ideal and Nadir bounds
+  // This guarantees mathematical invariance against dominated candidates in the pool.
   let kneePoint: ScoredPlan | null = null;
-  let minUtopiaDist = Infinity;
+  if (frontier.length > 0) {
+    let idealT = Infinity, nadirT = -Infinity;
+    let idealR = Infinity, nadirR = -Infinity;
+    let idealD = Infinity, nadirD = -Infinity;
+    let idealC = Infinity, nadirC = -Infinity;
 
-  for (const f of frontier) {
-    const { time, risk, distance, cost } = f.normalizedScores;
-    const utopiaDist = Math.sqrt(time * time + risk * risk + distance * distance + cost * cost);
-    if (utopiaDist < minUtopiaDist) {
-      minUtopiaDist = utopiaDist;
-      kneePoint = f;
+    for (const f of frontier) {
+      const c = f.candidate;
+      if (c.totalTravelTimeMin < idealT) idealT = c.totalTravelTimeMin;
+      if (c.totalTravelTimeMin > nadirT) nadirT = c.totalTravelTimeMin;
+
+      if (c.totalRiskScore < idealR) idealR = c.totalRiskScore;
+      if (c.totalRiskScore > nadirR) nadirR = c.totalRiskScore;
+
+      if (c.totalDistanceKm < idealD) idealD = c.totalDistanceKm;
+      if (c.totalDistanceKm > nadirD) nadirD = c.totalDistanceKm;
+
+      if (c.totalCost < idealC) idealC = c.totalCost;
+      if (c.totalCost > nadirC) nadirC = c.totalCost;
+    }
+
+    const rangeT = nadirT - idealT || 1;
+    const rangeR = nadirR - idealR || 1;
+    const rangeD = nadirD - idealD || 1;
+    const rangeC = nadirC - idealC || 1;
+
+    let minUtopiaDist = Infinity;
+    for (const f of frontier) {
+      const c = f.candidate;
+      const normT = (c.totalTravelTimeMin - idealT) / rangeT;
+      const normR = (c.totalRiskScore - idealR) / rangeR;
+      const normD = (c.totalDistanceKm - idealD) / rangeD;
+      const normC = (c.totalCost - idealC) / rangeC;
+
+      const utopiaDist = Math.sqrt(normT * normT + normR * normR + normD * normD + normC * normC);
+      if (utopiaDist < minUtopiaDist) {
+        minUtopiaDist = utopiaDist;
+        kneePoint = f;
+      }
     }
   }
 

@@ -1,6 +1,24 @@
 import { CandidateRoute, StaffShipment, Truck } from "./types";
 import { TemporalCapacityGraph } from "./capacity-graph";
 import { HardConstraintFilter } from "./constraints";
+import { PAN_INDIA_HUB_COORDS } from "./road-routes";
+
+export function getHubRoadDistanceKm(hub1: string, hub2: string): number {
+  const c1 = PAN_INDIA_HUB_COORDS[hub1.toUpperCase()] || PAN_INDIA_HUB_COORDS[hub1.substring(0, 3).toUpperCase()];
+  const c2 = PAN_INDIA_HUB_COORDS[hub2.toUpperCase()] || PAN_INDIA_HUB_COORDS[hub2.substring(0, 3).toUpperCase()];
+  if (!c1 || !c2) return 400; // sensible default
+  const R = 6371;
+  const dLat = ((c2[0] - c1[0]) * Math.PI) / 180;
+  const dLon = ((c2[1] - c1[1]) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((c1[0] * Math.PI) / 180) *
+      Math.cos((c2[0] * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return Math.round(R * c * 1.25); // Indian National Highway circuity factor
+}
 
 export class CandidateGenerator {
   private trucks: Truck[];
@@ -129,8 +147,8 @@ export class CandidateGenerator {
           (truck.currentLocation.toLowerCase() === "bhubaneswar" && pickupLoc === "visakhapatnam"));
 
       if (isCorridorMatch) {
-        const detourKm = 45;
-        const baseDistance = 350;
+        const baseDistance = getHubRoadDistanceKm(shipment.currentLocation, shipment.destination);
+        const detourKm = Math.max(25, Math.round(baseDistance * 0.12));
         const totalDist = baseDistance + detourKm;
         const pickupMs = new Date(this.currentTime).getTime() + 45 * 60000;
         const dropoffMs = pickupMs + Math.round((totalDist / 60) * 3600000);
@@ -224,9 +242,15 @@ export class CandidateGenerator {
             if (t1.id === t2.id) continue;
 
             const pMs = new Date(this.currentTime).getTime() + 30 * 60000;
-            const transferArrivalMs = pMs + 4 * 3600000;
+            const d1 = getHubRoadDistanceKm(shipment.currentLocation, interHub);
+            const d2 = getHubRoadDistanceKm(interHub, shipment.destination);
+            const dist = d1 + d2;
+            const leg1Hours = Math.max(1.5, d1 / 65);
+            const leg2Hours = Math.max(1.5, d2 / 65);
+
+            const transferArrivalMs = pMs + Math.round(leg1Hours * 3600000);
             const transferDepartureMs = transferArrivalMs + 45 * 60000; // 45 min transfer window
-            const dropoffMs = transferDepartureMs + 4.5 * 3600000;
+            const dropoffMs = transferDepartureMs + Math.round(leg2Hours * 3600000);
 
             const pickupTime = new Date(pMs).toISOString();
             const dropoffTime = new Date(dropoffMs).toISOString();
@@ -234,7 +258,6 @@ export class CandidateGenerator {
             const minVol = Math.min(t1.availableVolume ?? 12, t2.availableVolume ?? 12);
             const deadlineMs = new Date(shipment.deadline).getTime();
             const delayMinutes = Math.max(0, (dropoffMs - deadlineMs) / 60000);
-            const dist = 680;
             const incrementalCost = Math.round(dist * 2.4);
 
             const { isFeasible, reason } = HardConstraintFilter.evaluate({

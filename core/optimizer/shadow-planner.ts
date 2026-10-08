@@ -29,33 +29,45 @@ export class ShadowPlanner {
     // Clone graph and mark primary edges as heavily penalized (or temporarily blocked)
     const shadowGraph = graph.clone();
 
-    // Strategy 1: Strictly avoid primary edges if an alternative path exists
+    // Strategy 1: Strictly block primary corridor edges to force true topological disjointness
     for (const edge of shadowGraph.getAllEdges()) {
       if (primaryEdgeIds.has(edge.id) || primaryEdgeIds.has(`${edge.id}_rev`)) {
-        // High risk & 10x traversal time penalty to discourage reuse
-        edge.travelTimeMin *= 10;
-        edge.riskScore = Math.min(1.0, edge.riskScore + 0.5);
+        edge.status = "BLOCKED";
       }
     }
 
-    // Attempt Dijkstra and A* on the penalized graph
     const weights = OBJECTIVE_PROFILES[profile];
     const weightFn = (e: any) =>
       weights.timeWeight * e.travelTimeMin +
       weights.riskWeight * e.riskScore * 100 +
       weights.distanceWeight * e.distanceKm;
 
-    const candDijkstra = dijkstra(shadowGraph, source, target, {
+    let candDijkstra = dijkstra(shadowGraph, source, target, {
       avoidBlocked: true,
       weightFn,
     });
 
-    const candAstar = aStar(shadowGraph, source, target, {
+    let candAstar = aStar(shadowGraph, source, target, {
       avoidBlocked: true,
       weightFn,
     });
 
-    const candidatePool = [candDijkstra, candAstar].filter((c) => c.feasible);
+    let candidatePool = [candDijkstra, candAstar].filter((c) => c.feasible);
+
+    // Strategy 2: If fully edge-disjoint path does not exist, fall back to heavily penalizing primary edges
+    if (candidatePool.length === 0) {
+      const penalizedGraph = graph.clone();
+      for (const edge of penalizedGraph.getAllEdges()) {
+        if (primaryEdgeIds.has(edge.id) || primaryEdgeIds.has(`${edge.id}_rev`)) {
+          edge.travelTimeMin *= 10;
+          edge.riskScore = Math.min(1.0, edge.riskScore + 0.6);
+          edge.cost *= 5;
+        }
+      }
+      candDijkstra = dijkstra(penalizedGraph, source, target, { avoidBlocked: true, weightFn });
+      candAstar = aStar(penalizedGraph, source, target, { avoidBlocked: true, weightFn });
+      candidatePool = [candDijkstra, candAstar].filter((c) => c.feasible);
+    }
 
     // Filter using original constraints
     const { feasible } = constraintEngine.filterCandidates(candidatePool, context);
@@ -69,11 +81,12 @@ export class ShadowPlanner {
       profile
     );
 
-    // Return best backup plan that is distinct from primary
+    // Return best backup plan that is strictly distinct from primary
     const distinct = scored.find(
       (s) => s.candidate.path.join("->") !== primaryPlan.candidate.path.join("->")
     );
 
-    return distinct || scored[0] || null;
+    // Never return the identical path as shadow plan
+    return distinct || null;
   }
 }
