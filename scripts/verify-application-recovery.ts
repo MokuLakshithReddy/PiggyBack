@@ -29,14 +29,14 @@ async function verifyRecoveryPipeline() {
   console.log(`  • Solver Status:        ${receipt?.status}`);
   console.log(`  • Total Candidates:     ${receipt?.totalCandidatesEvaluated}`);
   console.log(`  • Feasible Options:     ${receipt?.feasibleCandidatesCount}`);
-  console.log(`  • Rejection Breakdown:  ${JSON.stringify(receipt?.rejectionBreakdown)}\n`);
+  console.log(`  • Rejected Count:       ${receipt?.rejectedCandidates?.length ?? 0}\n`);
 
   // 3. Primary Plan Details
   console.log(`[3. PRIMARY RECOVERY PLAN]`);
   if (primaryPlan) {
     console.log(`  • Assigned Vehicle:     ${primaryPlan.vehicleId}`);
     console.log(`  • Transit Corridor:     ${primaryPlan.pickupHub} -> ${primaryPlan.dropoffHub}`);
-    console.log(`  • Dropoff ETA:          ${primaryPlan.estimatedDropoffTime}`);
+    console.log(`  • Dropoff ETA:          ${primaryPlan.eta}`);
     console.log(`  • SLA Safety Buffer:    +${primaryPlan.slaMarginMinutes} min`);
     console.log(`  • Incremental Cost:     ₹${primaryPlan.incrementalCost.toLocaleString()}`);
     console.log(`  • Avoided Emissions:    ${primaryPlan.co2SavedKg} kg CO₂ (GLEC/ISO 14083 aligned)`);
@@ -50,7 +50,7 @@ async function verifyRecoveryPipeline() {
   if (shadowPlan) {
     console.log(`  • Backup Vehicle:       ${shadowPlan.vehicleId}`);
     console.log(`  • Corridor:             ${shadowPlan.pickupHub} -> ${shadowPlan.dropoffHub}`);
-    console.log(`  • Dropoff ETA:          ${shadowPlan.estimatedDropoffTime}`);
+    console.log(`  • Dropoff ETA:          ${shadowPlan.eta}`);
     console.log(`  • SLA Safety Buffer:    +${shadowPlan.slaMarginMinutes} min`);
     console.log(`  • Incremental Cost:     ₹${shadowPlan.incrementalCost.toLocaleString()}`);
     console.log(`  • Fallback Guarantee:   ${shadowPlan.shadowGuarantee?.guarantee}`);
