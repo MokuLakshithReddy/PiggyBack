@@ -1,6 +1,6 @@
 /**
  * Standard Logistics Cost & Emission Models
- * Grounded in GLEC Framework / ISO 14083 and Indian Freight Operations Standards
+ * Grounded in GLEC Framework / ISO 14083-aligned carbon accounting and Indian Freight Operations Standards
  */
 
 export interface CostBreakdown {
@@ -82,7 +82,7 @@ export class LogisticsCostModel {
 
 export class CarbonEmissionModel {
   /**
-   * Computes certified carbon avoidance per GLEC Framework / ISO 14083.
+   * Computes carbon avoidance using GLEC/ISO 14083-inspired ton-km emissions model.
    * Diesel emission factor: 2.68 kg CO2 / Liter of Diesel.
    * Dedicated LCV emissions: ~0.28 - 0.32 kg CO2 / km.
    * Heavy linehaul truck marginal cargo emission: ~0.035 kg CO2 / ton-km.
@@ -116,7 +116,7 @@ export class CarbonEmissionModel {
       emptyMilesAvertedKm,
       charterEmissionsKg,
       marginalPiggybackEmissionsKg,
-      methodology: "GLEC Framework / ISO 14083 Compliant Ton-Km Allocation",
+      methodology: "GLEC/ISO 14083-inspired ton-km emissions model",
     };
   }
 }

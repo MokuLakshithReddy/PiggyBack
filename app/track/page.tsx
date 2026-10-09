@@ -283,7 +283,7 @@ function TrackingContent() {
                   <span className="flex items-center gap-1.5">
                     <Leaf className="w-3.5 h-3.5 text-emerald-400" /> Zero Dedicated Empty Haul Carbon Generated
                   </span>
-                  <span className="text-muted">Eco-Certified Shared Routing</span>
+                  <span className="text-muted">GLEC-Aligned Shared Routing</span>
                 </div>
               </div>
             )}

@@ -60,7 +60,7 @@ Your parcel *${shipment.id}* was safely transferred onto express carrier *${vehi
 🌱 *Green Logistics:* ${co2Avoided} kg CO₂ avoided
 📍 *Live Tracking:* https://smart-intelligent-transport.vercel.app/track?id=${shipment.id}
 
-Thank you for choosing eco-certified logistics.`;
+Thank you for choosing green shared logistics.`;
 
   // Real Native SMS text
   const smsMessage = `PiggyBack Alert: Hi ${recipientName}, shipment ${shipment.id} is securely in transit via express carrier ${vehicleId}. Guaranteed ETA remains on-time for ${etaFormatted}. Shared logistics avoided ${co2Avoided} kg of carbon. Track live: https://smart-intelligent-transport.vercel.app/track?id=${shipment.id}`;

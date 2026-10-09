@@ -6,6 +6,7 @@ export type ConstraintType =
   | "RISK_CEILING"
   | "ROAD_STATUS"
   | "PRIORITY"
+  | "DUTY_LIMIT"
   | "VEHICLE_AVAILABILITY"
   | "CUSTOM";
 
@@ -15,6 +16,7 @@ export interface PlanContext {
   priorityLevel: 1 | 2 | 3; // 1 = Critical, 2 = High, 3 = Standard
   slaDeadlineMinutes: number; // Max allowed minutes from dispatch
   maxAcceptableRiskScore?: number; // 0.0 to 1.0
+  maxDriverDutyMinutes?: number; // Statutory driver duty ceiling (e.g., 480 min)
   requiredSpecialHandling?: ("COLD_CHAIN" | "HAZMAT" | "FRAGILE")[];
   currentTimestamp?: string;
 }

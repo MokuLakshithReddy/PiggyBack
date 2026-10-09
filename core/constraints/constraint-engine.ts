@@ -159,7 +159,24 @@ export class ConstraintEngine {
       },
     });
 
-    // 5. Critical Priority Soft/Hard Constraint
+    // 5. Statutory Driver Duty Limit Hard Constraint (Motor Transport Workers Act / EU Directive)
+    this.registerRule({
+      id: "DUTY_LIMIT_EXCEEDED",
+      name: "Statutory Driver Duty Limit",
+      type: "DUTY_LIMIT",
+      isHard: true,
+      validate: (candidate, context) => {
+        if (context.maxDriverDutyMinutes && candidate.totalTravelTimeMin > context.maxDriverDutyMinutes) {
+          return {
+            satisfied: false,
+            reason: `DUTY_LIMIT_EXCEEDED: Transit time of ${candidate.totalTravelTimeMin} min exceeds maximum permitted driver shift (${context.maxDriverDutyMinutes} min)`,
+          };
+        }
+        return { satisfied: true };
+      },
+    });
+
+    // 6. Critical Priority Soft/Hard Constraint
     this.registerRule({
       id: "PRIORITY_PROTECTION",
       name: "High Priority Congestion Immunity",

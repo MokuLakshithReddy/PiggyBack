@@ -224,13 +224,45 @@ export class CandidateDiversityExperiment {
     const expansionRatio = Math.round((maxK.paretoFrontierSize / Math.max(1, baseline.paretoFrontierSize)) * 10) / 10;
     const runtimeScaling = Math.round((maxK.runtimeMs / Math.max(0.1, baseline.runtimeMs)) * 10) / 10;
 
+    // Dynamically calculate optimalK and diminishingReturnsThreshold from marginal improvement & saturation
+    let optimalK = kValues[0];
+    let maxMarginalEfficiency = -1;
+    let diminishingReturnsThreshold = kValues[kValues.length - 1];
+    let foundDiminishing = false;
+
+    for (let i = 1; i < aggregatedResults.length; i++) {
+      const prev = aggregatedResults[i - 1];
+      const curr = aggregatedResults[i];
+
+      // Measure marginal gain: combination of quality score reduction and Pareto frontier expansion
+      const qualityDelta = Math.max(0, prev.solutionQualityScore - curr.solutionQualityScore);
+      const qualityGainRatio = prev.solutionQualityScore > 0 ? qualityDelta / prev.solutionQualityScore : 0;
+      const frontierDelta = Math.max(0, curr.paretoFrontierSize - prev.paretoFrontierSize);
+      const frontierGainRatio = prev.paretoFrontierSize > 0 ? frontierDelta / prev.paretoFrontierSize : 0;
+
+      const compositeGain = qualityGainRatio * 0.7 + frontierGainRatio * 0.3;
+      const runtimeDelta = Math.max(0.1, curr.runtimeMs - prev.runtimeMs);
+      const marginalEfficiency = compositeGain / runtimeDelta;
+
+      if (marginalEfficiency > maxMarginalEfficiency) {
+        maxMarginalEfficiency = marginalEfficiency;
+        optimalK = curr.K;
+      }
+
+      // Diminishing returns threshold: first K where marginal quality improvement drops below 1%
+      if (!foundDiminishing && qualityGainRatio < 0.01 && i >= 2) {
+        diminishingReturnsThreshold = curr.K;
+        foundDiminishing = true;
+      }
+    }
+
     return {
       timestamp: new Date().toISOString(),
       evaluatedKValues: kValues,
       results: aggregatedResults,
       insights: {
-        optimalK: 25, // Sweet-spot between Pareto exploration and sub-millisecond execution
-        diminishingReturnsThreshold: 50,
+        optimalK, // Experimentally determined via maximum marginal efficiency (gain / ms)
+        diminishingReturnsThreshold, // Experimentally determined point of marginal saturation (<1% delta)
         paretoExpansionRatio: expansionRatio,
         runtimeScalingFactor: runtimeScaling,
       },

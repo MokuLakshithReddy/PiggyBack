@@ -76,11 +76,11 @@ export function EvaluationGuide() {
       step: "05",
       title: "Proof of Recovery & ESG Trace",
       subtitle: "Zero-Carbon Audit Trail",
-      desc: "Inspect cryptographic proof, verified SLA adherence, and ISO 14083 / GLEC certified carbon avoidance.",
+      desc: "Inspect cryptographic proof, verified SLA adherence, and GLEC/ISO 14083-aligned carbon avoidance.",
       href: "/staff/trace/SHP-2048",
       icon: ShieldCheck,
       color: "text-blue-400",
-      badge: "ESG Certified",
+      badge: "ESG Aligned",
     },
   ];
 

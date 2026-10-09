@@ -1,3 +1,10 @@
+/**
+ * APPLICATION-LAYER OPTIMIZATION ADAPTER
+ * Architecture Role: Bridges the core canonical optimization engine (core/optimizer, core/models)
+ * to Next.js application entities (StaffShipment, Truck, RecoveryPlan).
+ * Core optimization algorithms, Pareto frontier computation, and ESG math reside canonically in core/.
+ */
+
 import { CandidateRoute, RecoveryPlan, ShadowGuaranteeMetrics, StaffShipment } from "./types";
 import { LogisticsCostModel, CarbonEmissionModel } from "../../core/models/cost-emissions";
 import { computeParetoFrontier } from "../../core/optimizer/pareto";
@@ -32,7 +39,7 @@ export class LexicographicOptimizer {
    * 4. Minimize transfers count
    * 5. Minimize distance (km)
    *
-   * Then computes a strictly independent Shadow Plan using non-overlapping fleet vehicles.
+   * Then computes an edge-disjoint Shadow Plan when topology permits, with quantified minimum-overlap fallback.
    */
   public solve(): OptimizationResult {
     const startTime = performance.now();
@@ -106,7 +113,7 @@ export class LexicographicOptimizer {
     const dropoffMs = new Date(bestCandidate.dropoffTime).getTime();
     const slaMarginMinutes = Math.round((deadlineMs - dropoffMs) / 60000);
 
-    // Primary Plan ESG & Savings Calculations per GLEC Framework / ISO 14083
+    // Primary Plan ESG & Savings Calculations per GLEC/ISO 14083-aligned ton-km models
     const priorityLevel =
       this.shipment.priority === "High" ? 1 : this.shipment.priority === "Medium" ? 2 : 3;
     const costAnalysis = LogisticsCostModel.calculateCost({
@@ -149,7 +156,7 @@ export class LexicographicOptimizer {
       costSavingsPercent,
     };
 
-    // Shadow Plan: strictly independent (excluding primary vehicle's trucks)
+    // Shadow Plan: Edge-disjoint when topology permits, with quantified minimum-overlap fallback
     const primaryVehicles = new Set(bestCandidate.vehicleId.split("+").map((s) => s.trim()));
     const fullyDisjointCandidates = ranked.filter((c) => {
       const cVehicles = c.vehicleId.split("+").map((s) => s.trim());

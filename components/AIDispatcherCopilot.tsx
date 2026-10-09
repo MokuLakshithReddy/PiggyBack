@@ -44,14 +44,14 @@ export function AIDispatcherCopilot({
     {
       id: "shadow_plan",
       question: "How does the Shadow Plan ensure fault tolerance?",
-      answer: `The Shadow Plan is computed using strictly independent fleet vehicles (disjoint set). If carrier ${plan.vehicleId} suffers an unexpected tire blowout, highway roadblock, or breakdown on NH44, dispatchers do not need to re-run the solver. The pre-approved Shadow Plan can be activated with a single click, ensuring zero downtime.`,
+      answer: `The Shadow Plan is computed as an edge-disjoint route when network topology permits, with quantified minimum-overlap fallback. If carrier ${plan.vehicleId} suffers an unexpected tire blowout, highway roadblock, or breakdown on NH44, dispatchers do not need to re-run the solver. The pre-approved Shadow Plan can be activated with a single click, ensuring immediate failover.`,
       badge: "Fault Tolerance",
       badgeColor: "bg-purple-500/10 text-purple-400 border-purple-500/30",
     },
     {
       id: "esg_savings",
       question: "What are the financial and ESG environmental savings?",
-      answer: `Piggybacking on an active scheduled route reduces operational costs from ₹${(plan.baselineCharterCost || 18500).toLocaleString()} (dedicated emergency single-use charter per ISO 14083) down to ₹${plan.incrementalCost.toLocaleString()} (marginal incremental detour). This achieves a ${plan.costSavingsPercent || 82}% net cost reduction, eliminates ~${(plan.co2SavedKg || 390).toLocaleString()} kg of carbon emissions, and avoids ~${(plan.emptyMilesAvertedKm || 550).toLocaleString()} km of empty deadhead diesel driving.`,
+      answer: `Piggybacking on an active scheduled route reduces operational costs from ₹${(plan.baselineCharterCost || 18500).toLocaleString()} (dedicated emergency single-use charter) down to ₹${plan.incrementalCost.toLocaleString()} (marginal incremental detour). Calculated using a GLEC/ISO 14083-inspired ton-km emissions model, this achieves a ${plan.costSavingsPercent || 82}% net cost reduction, eliminates ~${(plan.co2SavedKg || 390).toLocaleString()} kg of carbon emissions, and avoids ~${(plan.emptyMilesAvertedKm || 550).toLocaleString()} km of empty deadhead diesel driving.`,
       badge: "ESG & ROI",
       badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/30",
     },

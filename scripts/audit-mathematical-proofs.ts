@@ -33,14 +33,14 @@ function assert(condition: boolean, testName: string, detail?: string) {
 }
 
 console.log(`\n${BOLD}========================================================================${RESET}`);
-console.log(`${BOLD}  MOSAIC OPTIMIZER MATHEMATICAL & ALGORITHMIC AUDIT SUITE${RESET}`);
-console.log(`  Verifying Formal Proofs Across Candidate Gen, Pareto, SLA & ESG${RESET}`);
+console.log(`${BOLD}  MOSAIC OPTIMIZER MATHEMATICAL & ALGORITHMIC VERIFICATION SUITE${RESET}`);
+console.log(`  Automated Property Checks Across Candidate Gen, Pareto, SLA & ESG${RESET}`);
 console.log(`${BOLD}========================================================================${RESET}\n`);
 
 // ────────────────────────────────────────────────────────────────────────────
-// PROOF 1: SLA Buffer Margin Active Optimization (Fixing Dead Stages)
+// CHECK 1: SLA Buffer Margin Active Optimization
 // ────────────────────────────────────────────────────────────────────────────
-console.log(`${BOLD}${CYAN}[PROOF 1] Lexicographical SLA Buffer Margin Optimization${RESET}`);
+console.log(`${BOLD}${CYAN}[CHECK 1] Lexicographical SLA Buffer Margin Optimization${RESET}`);
 
 const mockShipment: StaffShipment = {
   id: "SHP-AUDIT-1",
@@ -110,9 +110,9 @@ assert(
 console.log(`  ↳ Primary Plan SLA Margin: ${optResSLA.primaryPlan?.slaMarginMinutes} minutes buffer.`);
 
 // ────────────────────────────────────────────────────────────────────────────
-// PROOF 2: True Edge-Disjoint Shadow Plan Resilience
+// CHECK 2: True Edge-Disjoint Shadow Plan Resilience
 // ────────────────────────────────────────────────────────────────────────────
-console.log(`\n${BOLD}${CYAN}[PROOF 2] Topological Shadow-Plan Independence Verification${RESET}`);
+console.log(`\n${BOLD}${CYAN}[CHECK 2] Topological Shadow-Plan Independence Verification${RESET}`);
 
 const graph = buildPanIndiaLogisticsGraph();
 const coreOptimizer = new PiggyBackOptimizer(graph);
@@ -152,9 +152,9 @@ if (solveRes.shadowPlan) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// PROOF 3: Deterministic SHA-256 Decision Receipt Cryptography
+// CHECK 3: Deterministic SHA-256 Decision Receipt Cryptography
 // ────────────────────────────────────────────────────────────────────────────
-console.log(`\n${BOLD}${CYAN}[PROOF 3] Deterministic SHA-256 Cryptographic Audit Verification${RESET}`);
+console.log(`\n${BOLD}${CYAN}[CHECK 3] Deterministic SHA-256 Cryptographic Audit Verification${RESET}`);
 
 const receiptParams = {
   shipment: mockShipment,
@@ -176,9 +176,9 @@ assert(/^0x[0-9a-f]{64}$/i.test(r1.hash), "Receipt hash contains only valid hexa
 console.log(`  ↳ Generated SHA-256 Receipt: ${r1.hash}`);
 
 // ────────────────────────────────────────────────────────────────────────────
-// PROOF 4: 7-Dimension Constraint Gate Differentiation
+// CHECK 4: 7-Dimension Constraint Gate Differentiation
 // ────────────────────────────────────────────────────────────────────────────
-console.log(`\n${BOLD}${CYAN}[PROOF 4] 7-Dimension Constraint Gate Discrete Rejection Codes${RESET}`);
+console.log(`\n${BOLD}${CYAN}[CHECK 4] 7-Dimension Constraint Gate Discrete Rejection Codes${RESET}`);
 
 const baseTruck: Truck = {
   id: "TRK-BASE",
@@ -267,9 +267,9 @@ assert(
 );
 
 // ────────────────────────────────────────────────────────────────────────────
-// PROOF 5: Pareto Knee-Point Invariance against Dominated Outlier Candidates
+// CHECK 5: Pareto Knee-Point Invariance against Dominated Outlier Candidates
 // ────────────────────────────────────────────────────────────────────────────
-console.log(`\n${BOLD}${CYAN}[PROOF 5] Pareto Knee-Point Invariance against Dominated Outliers${RESET}`);
+console.log(`\n${BOLD}${CYAN}[CHECK 5] Pareto Knee-Point Invariance against Dominated Outliers${RESET}`);
 
 function createDummyScoredPlan(id: string, time: number, risk: number, dist: number, cost: number): ScoredPlan {
   const dummyResult: PathResult = {
@@ -320,9 +320,9 @@ assert(
 console.log(`  ↳ Consistent Knee-Point: [${baseKneeId}]`);
 
 // ────────────────────────────────────────────────────────────────────────────
-// PROOF 6: Geographic Haversine Triangle Inequality Verification
+// CHECK 6: Geographic Haversine Triangle Inequality Verification
 // ────────────────────────────────────────────────────────────────────────────
-console.log(`\n${BOLD}${CYAN}[PROOF 6] Dynamic Geographic Road Distance & Triangle Inequality${RESET}`);
+console.log(`\n${BOLD}${CYAN}[CHECK 6] Dynamic Geographic Road Distance & Triangle Inequality${RESET}`);
 
 const dDirect = getHubRoadDistanceKm("Delhi", "Chennai");
 const dLeg1 = getHubRoadDistanceKm("Delhi", "Nagpur");
@@ -335,5 +335,5 @@ assert(dDirect > 0 && dLeg1 > 0 && dLeg2 > 0, "Calculated realistic positive hig
 assert(dDirect <= dLeg1 + dLeg2 + 50, "Highway network satisfies metric triangle inequality");
 
 console.log(`\n${BOLD}========================================================================${RESET}`);
-console.log(`${BOLD}${GREEN}  ALL ${passedTests}/${totalTests} MATHEMATICAL PROOF AUDITS PASSED WITH ZERO DISCREPANCIES!${RESET}`);
+console.log(`${BOLD}${GREEN}  ALL ${passedTests}/${totalTests} VERIFICATION CHECKS PASSED WITH ZERO DISCREPANCIES!${RESET}`);
 console.log(`${BOLD}========================================================================${RESET}\n`);

@@ -3,7 +3,9 @@ import { generateSyntheticGraph } from "../graph/synthetic-generator";
 import { aStar } from "../algorithms/astar";
 import { dijkstra } from "../algorithms/dijkstra";
 import { PiggyBackOptimizer } from "../optimizer/optimizer";
+import { ConstraintEngine } from "../constraints/constraint-engine";
 import { PlanContext } from "../constraints/types";
+import { ShadowPlannerEvaluator } from "./shadow-eval";
 
 export interface FailureCaseReport {
   id: string;
@@ -168,14 +170,17 @@ export class FailureAnalysisEngine {
   }
 
   private static auditCorrelatedCascadeFailure(): FailureCaseReport {
+    // Run empirical evaluation to compute actual measured disjointness and classification rates
+    const shadowMetrics = ShadowPlannerEvaluator.runEvaluation(20);
+
     return {
       id: "FAIL-04",
       title: "Correlated Regional Highway Blockades & Failover Collapse",
       problemObserved: "Simultaneous weather/monsoon blockades along primary national highways cause single-path solvers to halt indefinitely.",
       impactMetrics: {
-        unmitigatedMetric: "Single-plan systems freeze with 0 backup routes and unquantified downtime",
-        mitigatedMetric: "Shadow Planner computes 100% edge-disjoint hot-standby plan with 0ms failover latency",
-        ratio: "62.8% true disjointness, 100% failover availability",
+        unmitigatedMetric: "Single-plan systems freeze with 0 backup routes and unquantified downtime under roadblock",
+        mitigatedMetric: `Evaluated ${shadowMetrics.totalScenariosEvaluated} scenarios: ${shadowMetrics.edgeDisjointPercent}% achieved fully edge-disjoint routes; 100% received a quantified backup classification (${shadowMetrics.averageOverlapPercentOnFallback}% avg overlap on fallback)`,
+        ratio: `${shadowMetrics.edgeDisjointPercent}% fully edge-disjoint backup routes; 100% quantified backup plan classification`,
       },
       rootCause: "Over-reliance on centralized trunk arteries without topological disjointness guarantees.",
       engineeringFix: "Dual-Plan MOSAIC architecture generating explicit EDGE_DISJOINT or PENALIZED_OVERLAP shadow plans.",
@@ -184,14 +189,42 @@ export class FailureAnalysisEngine {
   }
 
   private static auditDriverDutyHourLimit(): FailureCaseReport {
+    const constraintEngine = new ConstraintEngine();
+    // Empirically test a cohort of candidate detours across varying shift durations
+    const testCandidates = Array.from({ length: 20 }, (_, i) => ({
+      path: ["HUB-A", "HUB-B", "HUB-C"],
+      edges: [],
+      totalDistanceKm: 100 + i * 50,
+      totalTravelTimeMin: 300 + i * 30, // Ranges from 300m (5h) to 870m (14.5h)
+      totalRiskScore: 0.1,
+      totalCapacityKg: 1000,
+      feasible: true,
+      metrics: { executionTimeMs: 1, nodesExplored: 3, queuePushes: 3 },
+    }));
+
+    const filtered = constraintEngine.filterCandidates(testCandidates, {
+      cargoWeightKg: 200,
+      priorityLevel: 1,
+      slaDeadlineMinutes: 2000,
+      maxDriverDutyMinutes: 480,
+    });
+
+    const exceededCohort = testCandidates.filter((c) => c.totalTravelTimeMin > 480);
+    const rejectedForDuty = filtered.infeasible.filter((r) =>
+      r.violatedConstraints.some((v) => v.includes("DUTY_LIMIT_EXCEEDED"))
+    );
+    const enforcementRate = exceededCohort.length > 0
+      ? Math.round((rejectedForDuty.length / exceededCohort.length) * 100)
+      : 100;
+
     return {
       id: "FAIL-05",
       title: "Statutory Driver Duty Limit Exceedance under Heavy Detours",
       problemObserved: "Extended circumventions violate statutory 8-hour consecutive driver shift regulations, causing regulatory impoundments.",
       impactMetrics: {
         unmitigatedMetric: "Naive detour routing yields driver shifts of 14+ hours violating labor regulations",
-        mitigatedMetric: "Discrete DUTY_LIMIT_EXCEEDED gate rejects illegal legs and forces intermodal cross-dock transfers",
-        ratio: "100% statutory labor compliance",
+        mitigatedMetric: `Discrete DUTY_LIMIT_EXCEEDED gate intercepted ${rejectedForDuty.length}/${exceededCohort.length} excessive routes`,
+        ratio: `${enforcementRate}% statutory labor compliance enforcement across evaluated routes`,
       },
       rootCause: "Optimization models treating driver shifts as infinite continuous variables.",
       engineeringFix: "Statutory 480-minute driver duty constraint gate integrated into 7-dimension feasibility evaluation.",

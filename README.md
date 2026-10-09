@@ -26,10 +26,10 @@ When cross-dock sorting errors or carrier linehaul delays strand a shipment at a
 1. **Detects Routing Anomalies in Real Time:** Monitors scheduled cross-dock waypoints against live GPS telemetry.
 2. **Dynamic Capacity Piggybacking:** Computes spare weight and cubic volume across scheduled fleet trucks already passing through the stranded hub en route to the final destination.
 3. **7-Dimension Hard Constraint Gate:** Evaluates reachability, weight, volume, SLA deadline, detour tolerance, driver duty hours, and special cargo constraints (Cold-chain, Fragile, Hazmat).
-4. **Lexicographical Dual-Plan Optimization:** Generates an optimal **Primary Recovery Plan** and a strictly independent **Shadow Plan** using non-overlapping fleet assets for failover resiliency.
+4. **Lexicographical Dual-Plan Optimization:** Generates an optimal **Primary Recovery Plan** and an edge-disjoint **Shadow Plan** when topology permits (with quantified minimum-overlap fallback) using non-overlapping fleet assets for failover resiliency.
 5. **Turn-by-Turn Road Tracking:** Displays real National Highway road geometry with an animated delivery truck driving smoothly along the recovery corridor with live speedometer metrics.
 6. **Omnichannel Customer Dispatch:** Automatically notifies recipients via WhatsApp Direct API and native mobile device SMS (`sms:` URI) with TRAI DLT verification.
-7. **ESG Green Corridor Ledger:** Eliminates empty haul runs, certifying exact carbon avoidance per GLEC Framework & ISO 14083 ton-km models (typically saving 350–520 kg CO₂ per intercity recovery).
+7. **ESG Green Corridor Ledger:** Eliminates empty haul runs, calculating exact carbon avoidance per GLEC/ISO 14083-inspired ton-km models (typically saving 350–520 kg CO₂ per intercity recovery).
 
 ---
 
@@ -220,29 +220,41 @@ flowchart LR
 ### 5. 🛡️ Cryptographic Audit Trail & Digital Waybill (`/staff/trace/[id]`)
 - **Tamper-Evident SHA-256 Decision Receipts**: Generates deterministic hashes recording candidate ranking rationale, rejected options, and timestamps.
 - **Digital Waybill Modal**: Printable, exportable cargo consignment note featuring carrier dispatch stamps and verification QR codes.
-- **Eco-Certified Green Logistics**: Computes avoided fuel consumption and carbon metrics per GLEC Framework & ISO 14083 standard models.
+- **GLEC/ISO 14083-Aligned Green Logistics**: Computes avoided fuel consumption and carbon metrics per GLEC Framework & ISO 14083-aligned standard models.
 
 ---
 
-## 🧪 Automated Terminal Test Suite
+## 🧪 Automated Terminal Test Suite & Benchmark Harness
 
 The repository includes a standalone automated test suite validating all computational engines:
 
 ### Run Commands:
 ```bash
-# Run unit & functional integration test suite
+# Run unit & functional integration test suite (11/11 tests)
 npm test
 
-# Run formal mathematical proof audit (15/15 proofs)
+# Run Mathematical & Algorithmic Verification Suite (15/15 verification checks passed)
 npm run test:audit
 
-# Run Candidate Diversity Experiment (K = 5, 10, 25, 50, 100)
+# Run Candidate Diversity Experiment (K = 5, 10, 25, 50, 100 with dynamic saturation knee)
 npm run eval:diversity
 
-# Run 1,000-Scenario Large-Scale Randomized Evaluation
+# Run 1,000-Scenario Large-Scale Randomized Stress Evaluation
 npm run eval:scale
 
-# Run complete verification & evaluation pipeline
+# Run 500-Scenario Baseline Benchmark (Shortest Path vs 5 Weighted-Sum Profiles vs Pareto Knee)
+npm run eval:baselines
+
+# Run Quantitative Shadow Planner Evaluation (Edge-disjoint %, fallback %, overlap %)
+npm run eval:shadow
+
+# Run Dynamic Replanning Benchmark (Shadow failover vs local repair vs full recompute)
+npm run eval:replanning
+
+# Run 1,000+ Property-Based Tests (8,000 mathematical invariants checked)
+npm run test:properties
+
+# Run complete verification & evaluation pipeline end-to-end
 npm run test:all
 ```
 
@@ -313,20 +325,27 @@ npm run test:all
 │   ├── EvaluationGuide.tsx             # Global floating Jury Tour with 1-click stage navigation
 │   ├── AIDispatcherCopilot.tsx         # AI Copilot assistant for recovery operations
 │   └── Navbar.tsx                      # Responsive navigation bar with mobile drawer
+├── core/                           # Canonical Optimization & Algorithmic Engine
+│   ├── algorithms/                 # Dijkstra, A*, Yen's KSP, BFS, Greedy
+│   ├── constraints/                # ConstraintEngine (Capacity, SLA, Risk, Road Status, Duty Limit)
+│   ├── evaluation/                 # 1000-scenario harness, 500-scenario baselines, ablation, diversity
+│   ├── graph/                      # Graph data structures & synthetic generators
+│   ├── models/                     # GLEC/ISO 14083-aligned cost & carbon emission models
+│   ├── optimizer/                  # Multi-objective Pareto frontier & knee-point selector
+│   └── simulation/                 # Discrete-event simulation & dynamic replanning engine
 ├── lib/
-│   └── engine/
+│   └── engine/                     # Application Adapter Layer (bridges UI/API state to core engine)
 │       ├── candidate-generator.ts  # Multi-hop piggyback route explorer
 │       ├── capacity-graph.ts       # Spatio-temporal truck capacity graph builder
 │       ├── constraints.ts          # 7-dimension hard constraint gatekeeper
 │       ├── disruptions.ts          # Digital twin disruption injection engine
-│       ├── optimizer.ts            # Lexicographical multi-objective solver
+│       ├── optimizer.ts            # Application-level lexicographical solver adapter
 │       ├── receipt-builder.ts      # Cryptographic SHA-256 decision receipt generator
 │       ├── road-routes.ts          # Turn-by-turn road geometry & spline interpolation
 │       ├── seed.ts                 # 20 Pan-India Hubs, 23 trucks, seed consignments
 │       ├── state-manager.ts        # Reactive digital twin singleton with subscriber hooks
 │       └── types.ts                # TypeScript domain models
-└── scripts/
-    └── test-runner.ts              # Automated CLI test suite for Problem Statement SH-205
+└── scripts/                        # Benchmark & verification runners
 ```
 
 ---
@@ -384,7 +403,7 @@ If you are evaluating this project for the hackathon, follow this 5-step demonst
 
 5. **💬 Step 5: Send Real Customer Alerts & View Audit Trace**
    - Click **Customer Alert** to test one-click dispatch to real **WhatsApp** or native **SMS** (`sms:` URI).
-   - View **View Proof / Trace** (`/staff/trace/SHP-2048`) to verify cryptographic hash and ISO 14083 carbon avoidance certification.
+   - View **View Proof / Trace** (`/staff/trace/SHP-2048`) to verify cryptographic hash and ISO 14083-aligned carbon avoidance audit trail.
 
 ---
 
