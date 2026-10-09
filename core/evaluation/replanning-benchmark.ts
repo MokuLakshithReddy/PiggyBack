@@ -61,18 +61,18 @@ export class ReplanningBenchmarkSuite {
 
       const agent: SimulationAgent = {
         id: `AGENT-${d}`,
-        shipmentId: `SHP-${d}`,
+        cargoWeightKg: 100,
+        priorityLevel: 2,
         source,
         destination: target,
+        slaDeadlineMinutes: 2000,
         currentLocationNode: affectedEdge.source,
         currentEdgeIndex: 1,
-        progressFraction: 0.2,
-        status: "IN_TRANSIT",
+        currentEdgeProgressPct: 20,
+        status: "EN_ROUTE",
         activePlan: primary,
         shadowPlan: shadow,
-        timeElapsedMin: 120,
-        distanceTraveledKm: 200,
-        disruptionsEncountered: [],
+        history: [],
       };
 
       // 1. SHADOW FAILOVER

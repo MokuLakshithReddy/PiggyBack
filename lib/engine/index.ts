@@ -4,7 +4,7 @@
  */
 
 // Core Algorithmic Framework
-export * from "../../core";
+export * as core from "../../core";
 
 // Engine Runtime & Data Types
 export * from "./types";
@@ -13,7 +13,7 @@ export * from "./candidate-generator";
 export * from "./capacity-graph";
 export * from "./constraints";
 export * from "./receipt-builder";
-export * from "./disruptions";
+export { DisruptionEngine } from "./disruptions";
 export * from "./state-manager";
 export * from "./autopsy";
 export * from "./seed";

@@ -192,14 +192,17 @@ export class FailureAnalysisEngine {
     const constraintEngine = new ConstraintEngine();
     // Empirically test a cohort of candidate detours across varying shift durations
     const testCandidates = Array.from({ length: 20 }, (_, i) => ({
+      source: "HUB-A",
+      target: "HUB-C",
       path: ["HUB-A", "HUB-B", "HUB-C"],
       edges: [],
       totalDistanceKm: 100 + i * 50,
       totalTravelTimeMin: 300 + i * 30, // Ranges from 300m (5h) to 870m (14.5h)
       totalRiskScore: 0.1,
+      totalCost: 1000,
       totalCapacityKg: 1000,
       feasible: true,
-      metrics: { executionTimeMs: 1, nodesExplored: 3, queuePushes: 3 },
+      metrics: { algorithm: "MOCK", executionTimeMs: 1, nodesExplored: 3, edgesEvaluated: 3 },
     }));
 
     const filtered = constraintEngine.filterCandidates(testCandidates, {
