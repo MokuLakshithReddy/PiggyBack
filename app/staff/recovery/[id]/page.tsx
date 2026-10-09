@@ -562,7 +562,7 @@ export default function RecoveryPage({ params }: { params: Promise<{ id: string 
 
             <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-600/30 px-4 py-2 rounded-xl text-xs font-mono font-bold text-emerald-800 shrink-0 shadow-xs">
               <ShieldCheck className="w-4 h-4 text-emerald-600" />
-              <span>GREEN FREIGHT CERTIFIED</span>
+              <span>ISO 14083-ALIGNED GREEN FREIGHT</span>
             </div>
           </div>
 

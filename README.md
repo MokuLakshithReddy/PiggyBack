@@ -5,7 +5,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Leaflet GIS](https://img.shields.io/badge/Leaflet-GIS_Mapping-199900?style=for-the-badge&logo=leaflet)](https://leafletjs.com/)
 [![Tailwind CSS 4](https://img.shields.io/badge/Tailwind-CSS_v4-38B2AC?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
-[![ESG Certified](https://img.shields.io/badge/ESG-Zero--Carbon_Corridors-10B981?style=for-the-badge)](https://en.wikipedia.org/wiki/Environmental,_social,_and_governance)
+[![ISO 14083-Aligned Model](https://img.shields.io/badge/Carbon_Estimation-ISO_14083--Aligned_Model-10B981?style=for-the-badge)](https://en.wikipedia.org/wiki/Carbon_accounting)
 [![TRAI DLT](https://img.shields.io/badge/TRAI_DLT-SMS_Gateway-2563EB?style=for-the-badge)](https://www.trai.gov.in/)
 [![Tests](https://img.shields.io/badge/Test_Suite-11%2F11_PASSING-brightgreen?style=for-the-badge)](#-automated-terminal-test-suite)
 

@@ -23,7 +23,7 @@ async function main() {
   console.log("----------------------------------------------------------------------------------\n");
 
   console.log("[ARCHITECTURAL GUARANTEE SUMMARY]");
-  console.log(`  • 100% Deterministic Guarantee: Every backup route is certified as EDGE_DISJOINT or PENALIZED_OVERLAP.`);
+  console.log(`  • 100% Deterministic Guarantee: Every backup route is verified and classified as EDGE_DISJOINT or PENALIZED_OVERLAP.`);
   console.log(`  • Zero Ambiguity: Exact shared kilometer count and corridor overlap percentages are attached to receipts.`);
   console.log(`  • Operational Redundancy: Solvers achieve ${metrics.edgeDisjointPercent}% full physical disjointness across interstate routes.\n`);
 
