@@ -282,9 +282,11 @@ export class LexicographicOptimizer {
       }));
 
     const solveTimeMs = Math.round(performance.now() - startTime);
+    const isOptimal = bestCandidate.delayMinutes <= 0 && slaMarginMinutes >= 0;
+    const status: "OPTIMAL" | "FEASIBLE" = isOptimal ? "OPTIMAL" : "FEASIBLE";
 
     return {
-      status: "OPTIMAL",
+      status,
       primaryPlan,
       shadowPlan,
       shadowGuarantee,
