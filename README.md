@@ -1,4 +1,7 @@
 # 🚚 PIGGYBACK (MOSAIC Engine)
+
+[![Stars](https://img.shields.io/github/stars/MokuLakshithReddy/PiggyBack?style=flat-square)](https://github.com/MokuLakshithReddy/PiggyBack/stargazers) [![Forks](https://img.shields.io/github/forks/MokuLakshithReddy/PiggyBack?style=flat-square)](https://github.com/MokuLakshithReddy/PiggyBack/forks) [![Open Issues](https://img.shields.io/github/issues/MokuLakshithReddy/PiggyBack?style=flat-square)](https://github.com/MokuLakshithReddy/PiggyBack/issues) [![Last Commit](https://img.shields.io/github/last-commit/MokuLakshithReddy/PiggyBack?style=flat-square)](https://github.com/MokuLakshithReddy/PiggyBack/commits/main)
+
 ### *Intelligent Shipment Recovery & Autonomous Freight Capacity Piggybacking*
 
 [![Next.js 16](https://img.shields.io/badge/Next.js-16.3.5-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
