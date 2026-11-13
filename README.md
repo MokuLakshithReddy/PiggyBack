@@ -11,6 +11,36 @@
 
 ---
 
+## Visual workflow: recover a stranded shipment
+
+```mermaid
+flowchart TD
+    A["Shipment missed its planned route or hub"] --> B["Find candidate carriers and transfer hubs"]
+    B --> C["Apply hard constraints: time, payload, volume, duty hours"]
+    C --> D["Score feasible recovery plans"]
+    D --> E["Pareto ranking and knee-point selection"]
+    E --> F["Primary recovery plan"]
+    E --> G["Independent shadow / fallback plan"]
+    F --> H["Explain feasibility, detour, cost and risk"]
+    G --> H
+```
+
+### Benchmark snapshot
+
+| 1,000-scenario stress test | Result |
+|---|---:|
+| Invariant compliance | **100.0%** |
+| Feasibility rate | 41.2% |
+| p95 solver latency | 0.37 ms |
+| p99 solver latency | **0.87 ms** |
+| Shadow plan availability | 58.7% |
+
+A 41.2% feasibility rate means the solver found a feasible plan in that constrained scenario set; it does **not** mean all shipments can always be recovered. The 100% figure refers to tested invariant compliance, not delivery success. See the [full benchmark report](docs/benchmarks/BENCHMARK_RESULTS.md) and [replanning benchmark](core/evaluation/replanning-benchmark.ts).
+
+**Why it matters:** searches for spare capacity already moving toward a destination, instead of assuming every disruption needs a dedicated emergency vehicle.
+
+---
+
 ## 📌 Problem Statement Overview
 - **Problem Statement Number:** `SH-205`
 - **Domain:** Smart Transportation, Supply Chain Resiliency & Logistics Optimization
