@@ -1,4 +1,7 @@
 # 🚚 PIGGYBACK (MOSAIC Engine)
+
+[![Stars](https://img.shields.io/github/stars/MokuLakshithReddy/PiggyBack?style=flat-square)](https://github.com/MokuLakshithReddy/PiggyBack/stargazers) [![Forks](https://img.shields.io/github/forks/MokuLakshithReddy/PiggyBack?style=flat-square)](https://github.com/MokuLakshithReddy/PiggyBack/forks) [![Open Issues](https://img.shields.io/github/issues/MokuLakshithReddy/PiggyBack?style=flat-square)](https://github.com/MokuLakshithReddy/PiggyBack/issues) [![Last Commit](https://img.shields.io/github/last-commit/MokuLakshithReddy/PiggyBack?style=flat-square)](https://github.com/MokuLakshithReddy/PiggyBack/commits/main)
+
 ### *Intelligent Shipment Recovery & Autonomous Freight Capacity Piggybacking*
 
 [![Next.js 16](https://img.shields.io/badge/Next.js-16.3.5-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
@@ -8,6 +11,36 @@
 [![ISO 14083-Aligned Model](https://img.shields.io/badge/Carbon_Estimation-ISO_14083--Aligned_Model-10B981?style=for-the-badge)](https://en.wikipedia.org/wiki/Carbon_accounting)
 [![TRAI DLT](https://img.shields.io/badge/TRAI_DLT-SMS_Gateway-2563EB?style=for-the-badge)](https://www.trai.gov.in/)
 [![Tests](https://img.shields.io/badge/Test_Suite-11%2F11_PASSING-brightgreen?style=for-the-badge)](#-automated-terminal-test-suite)
+
+---
+
+## Visual workflow: recover a stranded shipment
+
+```mermaid
+flowchart TD
+    A["Shipment missed its planned route or hub"] --> B["Find candidate carriers and transfer hubs"]
+    B --> C["Apply hard constraints: time, payload, volume, duty hours"]
+    C --> D["Score feasible recovery plans"]
+    D --> E["Pareto ranking and knee-point selection"]
+    E --> F["Primary recovery plan"]
+    E --> G["Independent shadow / fallback plan"]
+    F --> H["Explain feasibility, detour, cost and risk"]
+    G --> H
+```
+
+### Benchmark snapshot
+
+| 1,000-scenario stress test | Result |
+|---|---:|
+| Invariant compliance | **100.0%** |
+| Feasibility rate | 41.2% |
+| p95 solver latency | 0.37 ms |
+| p99 solver latency | **0.87 ms** |
+| Shadow plan availability | 58.7% |
+
+A 41.2% feasibility rate means the solver found a feasible plan in that constrained scenario set; it does **not** mean all shipments can always be recovered. The 100% figure refers to tested invariant compliance, not delivery success. See the [full benchmark report](docs/benchmarks/BENCHMARK_RESULTS.md) and [replanning benchmark](core/evaluation/replanning-benchmark.ts).
+
+**Why it matters:** searches for spare capacity already moving toward a destination, instead of assuming every disruption needs a dedicated emergency vehicle.
 
 ---
 
